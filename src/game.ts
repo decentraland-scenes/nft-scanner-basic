@@ -17,7 +17,7 @@ executeTask(async () => {
   }
 })
 
-export async function checkTokens() {
+async function checkTokens() {
   let balance = await crypto.currency.balance(contractAddress, userAddress)
   log("BALANCE: ", balance)
 
