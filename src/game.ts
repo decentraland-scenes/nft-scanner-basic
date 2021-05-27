@@ -1,7 +1,23 @@
-// This is going to be the Jazz Club example
 // NOTE: remember to add &ENABLE_WEB3 to the url when running locally
 import * as EthereumController from "@decentraland/EthereumController"
 import * as crypto from "@dcl/crypto-scene-utils"
+
+// Base
+const base = new Entity()
+base.addComponent(new GLTFShape("models/baseDarkWithCollider.glb"))
+engine.addEntity(base)
+
+// Facade
+const facade = new Entity()
+facade.addComponent(new GLTFShape("models/facade.glb"))
+facade.addComponent(new Transform({ position: new Vector3(8, 0.05, 10)}))
+facade.getComponent(Transform).rotate(Vector3.Up(), 180)
+engine.addEntity(facade)
+
+// Door
+const door = new Entity()
+door.addComponent(new GLTFShape("models/door.glb"))
+door.setParent(facade)
 
 // Config
 let userAddress: string
@@ -25,19 +41,19 @@ async function checkTokens() {
 }
 
 // Button
-const box = new Entity()
-box.addComponent(new BoxShape())
-box.addComponent(new Transform({ position: new Vector3(8, 1, 8) }))
-box.addComponent(
-  new OnPointerDown(
-    () => {
-      checkTokens()
-    },
-    {
-      showFeedback: true,
-      hoverText: "Check Tokens",
-    }
-  )
-)
+// const box = new Entity()
+// box.addComponent(new BoxShape())
+// box.addComponent(new Transform({ position: new Vector3(8, 1, 8) }))
+// box.addComponent(
+//   new OnPointerDown(
+//     () => {
+//       checkTokens()
+//     },
+//     {
+//       showFeedback: true,
+//       hoverText: "Check Tokens",
+//     }
+//   )
+// )
 
-engine.addEntity(box)
+// engine.addEntity(box)
