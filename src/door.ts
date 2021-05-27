@@ -1,15 +1,3 @@
-/**
- * Sound is a separated from the coin entity so that you can
- * still hear it even when the coin is removed from the engine.
- */
-// const coinPickupSound = new Entity()
-// coinPickupSound.addComponent(new Transform())
-// coinPickupSound.addComponent(
-//   new AudioSource(new AudioClip('sounds/coinPickup.mp3'))
-// )
-// engine.addEntity(coinPickupSound)
-// coinPickupSound.setParent(Attachable.AVATAR)
-
 export class Door extends Entity {
   constructor(model: GLTFShape) {
     super()
