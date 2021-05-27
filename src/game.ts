@@ -2,6 +2,20 @@
 import * as EthereumController from "@decentraland/EthereumController"
 import * as crypto from "@dcl/crypto-scene-utils"
 import { Door } from "./door"
+import { Sound } from "./sound"
+
+// Config
+let userAddress: string
+const contractAddress = "0x6b47e7066c7db71aa04a1d5872496fe05c4c331f" // Contract for RTFKT x Atari wearables collection
+
+// Sounds
+const openDoorSound = new Sound(new AudioClip("sounds/openDoor.mp3"), false)
+const accessDeniedSound = new Sound(new AudioClip("sounds/accessDenied.mp3"), false)
+
+// Music
+const jazzMuffledSound = new Sound(new AudioClip("sounds/jazzMuffled.mp3"), true, true)
+const jazzSound = new Sound(new AudioClip("sounds/jazz.mp3"), true, true)
+jazzSound.getComponent(AudioSource).volume = 0.0
 
 // Base
 const base = new Entity()
@@ -30,9 +44,6 @@ door.addComponent(
     }
   )
 )
-// Config
-let userAddress: string
-const contractAddress = "0x6b47e7066c7db71aa04a1d5872496fe05c4c331f" // Contract for RTFKT x Atari wearables collection
 
 // On load
 executeTask(async () => {
@@ -48,5 +59,15 @@ async function checkTokens() {
   let balance = await crypto.currency.balance(contractAddress, userAddress)
   log("BALANCE: ", balance)
 
-  Number(balance) > 0 ? door.playDoorOpen() : log("Refuse Player Entry")
+  if (Number(balance) > 0) {
+    door.playDoorOpen()
+    openDoorSound.getComponent(AudioSource).playOnce()
+    jazzSound.getComponent(AudioSource).volume = 1.0
+  } else {
+    accessDeniedSound.getComponent(AudioSource).playOnce()
+    jazzMuffledSound.getComponent(AudioSource).volume = 1.0
+  }
 }
+
+
+
