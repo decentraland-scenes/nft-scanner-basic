@@ -16,11 +16,13 @@
   "dependencies": {
     "@dcl/crypto-scene-utils": "^1.1.1",
     "@dcl/ecs-scene-utils": "^1.7.0",
+    "@dcl/ui-scene-utils": "^1.8.1",
     "eth-connect": "^6.0.0"
   },
   "bundleDependencies": [
     "@dcl/crypto-scene-utils",
     "@dcl/ecs-scene-utils",
-    "eth-connect"
+    "eth-connect",
+    "@dcl/ui-scene-utils"
   ]
 }

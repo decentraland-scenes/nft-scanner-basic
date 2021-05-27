@@ -3,6 +3,7 @@ import * as EthereumController from "@decentraland/EthereumController"
 import * as crypto from "@dcl/crypto-scene-utils"
 import { Door } from "./door"
 import { Sound } from "./sound"
+import * as ui from "@dcl/ui-scene-utils"
 
 // Config
 let userAddress: string
@@ -45,6 +46,13 @@ door.addComponent(
   )
 )
 
+let noSign = new ui.CenterImage("images/no-sign.png", 1, true, 0, 20, 128, 128, {
+  sourceHeight: 512,
+  sourceWidth: 512,
+  sourceLeft: 0,
+  sourceTop: 0,
+})
+
 // On load
 executeTask(async () => {
   try {
@@ -55,6 +63,7 @@ executeTask(async () => {
   }
 })
 
+// Check player's wallet to see if they're holding any tokens relating to that contract address
 async function checkTokens() {
   let balance = await crypto.currency.balance(contractAddress, userAddress)
   log("BALANCE: ", balance)
@@ -64,6 +73,7 @@ async function checkTokens() {
     openDoorSound.getComponent(AudioSource).playOnce()
     jazzSound.getComponent(AudioSource).volume = 1.0
   } else {
+    noSign.show(1)
     accessDeniedSound.getComponent(AudioSource).playOnce()
     jazzMuffledSound.getComponent(AudioSource).volume = 1.0
   }
