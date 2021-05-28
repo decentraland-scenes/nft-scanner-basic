@@ -7,7 +7,7 @@ _demo of nft-scanner-basic scene running in preview._
 Checks whether the player owns a token from a particular smart contract before granting them permission to enter the club. In this example, we're checking whether the player owns a pair of RTFKT X Atari Sneakers, which is any token minted from this [contract](https://etherscan.io/address/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f).
 
 ## Instructions
-Walk up to the door and press the <kbd>E</kbd> key to see if you can access the club. The door will open and the audio quality increases if you happen to own at least one pair of RTFKT X Atari Sneakers. Please feel free to modify the `contractAddress` within the `game.ts` file to test out other tokens.
+Walk up to the door and press the <kbd>E</kbd> key to see if you can access the club. The door will open and the audio quality increases if you own at least one pair of RTFKT X Atari Sneakers. Please feel free to modify the `contractAddress` within the `game.ts` file to test other tokens.
 
 Use your mouse to look around and <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd><kbd>Space</kbd> keys on your keyboard to move forward, left, backward, right and jump respectively. You can also press the <kbd>P</kbd> key to adjust the graphics settings.
 
