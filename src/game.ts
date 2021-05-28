@@ -40,7 +40,7 @@ door.addComponent(
     },
     {
       button: ActionButton.PRIMARY,
-      hoverText: "Open Door",
+      hoverText: "Enter Club",
       showFeedback: true,
     }
   )
