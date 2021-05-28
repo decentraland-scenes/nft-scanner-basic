@@ -7,6 +7,9 @@ import * as ui from "@dcl/ui-scene-utils"
 
 // Config
 let userAddress: string
+
+// Example token from the contract: https://opensea.io/assets/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f/2
+// Contract address on Etherscan: https://etherscan.io/address/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f
 const contractAddress = "0x6b47e7066c7db71aa04a1d5872496fe05c4c331f" // Contract for RTFKT x Atari wearables collection
 
 // Sounds
@@ -46,6 +49,7 @@ door.addComponent(
   )
 )
 
+// UI
 let noSign = new ui.CenterImage("images/no-sign.png", 1, true, 0, 20, 128, 128, {
   sourceHeight: 512,
   sourceWidth: 512,
