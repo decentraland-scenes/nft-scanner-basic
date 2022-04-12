@@ -10,7 +10,8 @@ let userAddress: string
 
 // Example token from the contract: https://opensea.io/assets/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f/2
 // Contract address on Etherscan: https://etherscan.io/address/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f
-const contractAddress = "0x6b47e7066c7db71aa04a1d5872496fe05c4c331f" // Contract for RTFKT x Atari wearables collection
+//const contractAddress = "0x5CC5B05a8A13E3fBDB0BB9FcCd98D38e50F90c38" // SANDBOX LAND
+const contractAddress = "0x4da3978b45A3A7d931c93F543D2492bD1ba675BF" // SAMSUNG 837X - 8 
 
 // Sounds
 const openDoorSound = new Sound(new AudioClip("sounds/openDoor.mp3"), false)
