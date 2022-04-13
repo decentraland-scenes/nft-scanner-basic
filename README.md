@@ -13,6 +13,11 @@ Walk up to the door and press the <kbd>E</kbd> key to see if you can access the 
 
 Use your mouse to look around and <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd><kbd>Space</kbd> keys on your keyboard to move forward, left, backward, right and jump respectively. You can also press the <kbd>P</kbd> key to adjust the graphics settings.
 
+1- Change Contract Address
+2- dcl start
+3- add &ENABLE_WEB3 to URL
+4- dcl deploy --skip-build
+
 ## Try it out
 
 **Install the CLI**
@@ -43,3 +48,5 @@ For example, if the URL is `http://192.168.1.132:8000?position=0%2C0&SCENE_DEBUG
 - _accessDenied.mp3_ modified from https://freesound.org/people/tcpp/sounds/151309/
 - _jazz.mp3_ modified from https://www.hooksounds.com/royalty-free-music/elegant-jazz/376506/
 - _jazzMuffled.mp3_ modified from https://www.hooksounds.com/royalty-free-music/elegant-jazz/376506/
+
+
