@@ -18,6 +18,8 @@ Use your mouse to look around and <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D<
 3- add &ENABLE_WEB3 to URL
 4- dcl deploy --skip-build
 
+!!!! dcl start olmadan çalışmıyor
+
 ## Try it out
 
 **Install the CLI**
