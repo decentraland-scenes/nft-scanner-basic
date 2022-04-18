@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://decentraland.org/blog/tutorials/servers-part-2/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Take your scene building to the next level by learning how you can build a server that a Decentraland scene can interact with.">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no">
+<meta name="commit" content="2e270a8f15bdf6699ee908acd1e1070046769ae3">
+<meta name="release" content="blog-2110635171.commit-2e270a8">
+
+<link rel="stylesheet" href="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/index.css" type="text/css">
+<link rel="apple-touch-icon" sizes="72x72" href="https://decentraland.org/blog/images/icon.png">
+<link rel="shortcut icon" href="https://decentraland.org/blog/favicon.ico">
+<link rel="alternate" type="application/rss+xml" title="Decentraland" href="https://decentraland.org/blog/feed.xml">
+
+<script type="text/javascript" async="" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/fbevents.js"></script><script type="text/javascript" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/commons.54701049fd6fb8497e9e.js.gz" async="" status="loaded"></script><script type="text/javascript" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/facebook-pixel.dynamic.js.gz" async="" status="loaded"></script><script type="text/javascript" async="" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/analytics.min.js"></script><script src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/jquery.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/lunr.min.js" integrity="sha384-l5aHoiZwRnwQ9OzuoZ5NAn/fkd3jRXb/vdfDNKR7oacuzDpAw2HCgTkza5BjjJK8" crossorigin="anonymous"></script>
+<script src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/js.cookie.min.js" integrity="sha384-ujpAYcyxFaJsZN5668lLgOpEH8vtWrbOq8fvj+WZ2kD71LJwGa/9QP/suPPF1hTI" crossorigin="anonymous"></script>
+
+<script type="application/javascript" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/global.js"></script>
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Servers Deep Dive Part 2: Launching a Server | Decentraland</title>
+<meta name="generator" content="Jekyll v4.1.1">
+<meta property="og:title" content="Servers Deep Dive Part 2: Launching a Server">
+<meta name="author" content="Nico Earnshaw">
+<meta property="og:locale" content="en">
+<meta name="description" content="Take your scene building to the next level by learning how you can build a server that a Decentraland scene can interact with.">
+<meta property="og:description" content="Take your scene building to the next level by learning how you can build a server that a Decentraland scene can interact with.">
+<link rel="canonical" href="https://decentraland.org/blog/tutorials/servers-part-2/">
+<meta property="og:url" content="https://decentraland.org/blog/tutorials/servers-part-2/">
+<meta property="og:site_name" content="Decentraland">
+<meta property="og:image" content="https://decentraland.org/blog/images/banners/tutorials.png">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2020-07-20T00:00:01-03:00">
+<script type="application/ld+json">
+{"description":"Take your scene building to the next level by learning how you can build a server that a Decentraland scene can interact with.","headline":"Servers Deep Dive Part 2: Launching a Server","dateModified":"2020-07-20T00:00:01-03:00","datePublished":"2020-07-20T00:00:01-03:00","url":"https://decentraland.org/blog/tutorials/servers-part-2/","@type":"BlogPosting","image":"https://decentraland.org/blog/images/banners/tutorials.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://decentraland.org/blog/tutorials/servers-part-2/"},"author":{"@type":"Person","name":"Nico Earnshaw"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://decentraland.org/blog/images/icon.png"},"name":"Nico Earnshaw"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:site" content="@decentraland">
+
+<meta name="twitter:creator" content="nicoearnshaw">
+
+
+<script integrity="sha384-6iWp+YkfP4sxtgTaahBsrXJGlu5lzkwaR4JBMwg8bMNSZkCy/psEq70E4v2L4EvQ" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/embed.js" data-timestamp="1650268786857"></script><script type="text/javascript" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/a.js"></script><link rel="prefetch" as="style" href="https://c.disquscdn.com/next/embed/styles/lounge.567531e1abfac5c88f2ef94b952d12ba.css"><link rel="prefetch" as="script" href="https://c.disquscdn.com/next/embed/common.bundle.e51fe378e0cd63a2764bfb6c7ca542a8.js"><link rel="prefetch" as="script" href="https://c.disquscdn.com/next/embed/lounge.bundle.ac702132ea5e06471da27768120c5978.js"><link rel="prefetch" as="script" href="https://disqus.com/next/config.js"><style type="text/css">:root {
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --unit-size: 15px;
+  --color-action: #f05;
+}
+
+.DCL__Ad {
+  background: #eee;
+  background-size: cover;
+  width: 100%;
+  border-radius: var(--unit-size);
+  position: relative;
+  font-family: var(--font-family);
+  padding: var(--unit-size);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.DCL__Ad.DCL__Ad--full {
+  border-radius: 0;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.DCL__Ad.DCL__Ad--mini {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.DCL__Ad.DCL__Ad--empty {
+  display: none;
+}
+
+.DCL__Ad.DCL__Ad--closable {
+  padding-right: 32px;
+}
+
+.DCL__Ad .DCL__Ad__Container {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.DCL__Ad.DCL__Ad--full .DCL__Ad__Container {
+  max-width: 1064px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.DCL__Ad p,
+.DCL__Ad a,
+.DCL__Ad h1,
+.DCL__Ad h2,
+.DCL__Ad h3,
+.DCL__Ad h4,
+.DCL__Ad h5,
+.DCL__Ad h6 {
+  margin: 0;
+}
+
+.DCL__Ad .DCL__Ad__Action,
+.DCL__Ad .DCL__Ad__Button,
+.DCL__Ad .DCL__Ad__Image {
+  position: absolute;
+}
+
+.DCL__Ad .DCL__Ad__TextBlock {
+  position: relative;
+  display: block;
+  padding: 0;
+  box-sizing: border-box;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Title {
+  line-height: calc(var(--unit-size) * 2.5);
+  font-size: calc(var(--unit-size) * 2);
+  margin-bottom: calc(var(--unit-size) * 0.25);
+  font-weight: 600;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Subtitle {
+  line-height: calc(var(--unit-size) * 1.75);
+  font-size: calc(var(--unit-size) * 1.25);
+  margin-bottom: calc(var(--unit-size) * 0.25);
+  font-weight: 500;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Paragraph {
+  line-height: calc(var(--unit-size) * 1.3);
+  margin-bottom: calc(var(--unit-size) * 0.25);
+  font-size: var(--unit-size);
+  font-weight: 300;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Link {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.DCL__Ad .DCL__Ad__Link:hover {
+  opacity: 0.8;
+}
+
+.DCL__Ad .DCL__Ad__Emphasis {
+  font-style: italic;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Delete {
+  font-style: line-through;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Strong {
+  font-weight: 600;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Underline {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.DCL__Ad .DCL__Ad__Action {
+  display: block;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.DCL__Ad .DCL__Ad__Button {
+  line-height: var(--unit-size * 1.25);
+  font-size: var(--unit-size);
+  border-radius: calc(var(--unit-size) * 0.5);
+  background-color: var(--color-action);
+  color: white;
+  padding: calc(var(--unit-size) * 0.7) calc(var(--unit-size) * 1.7);
+  display: block;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.DCL__Ad .DCL__Ad__Image {
+  box-sizing: border-box;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.DCL__Ad .DCL__Ad__Close {
+  display: block;
+  position: absolute;
+  cursor: pointer;
+  top: var(--unit-size);
+  right: var(--unit-size);
+  box-sizing: border-box;
+  height: var(--unit-size);
+  width: var(--unit-size);
+}
+
+.DCL__Ad.DCL__Ad--full .DCL__Ad__Close {
+  top: 12px;
+  right: 16px;
+}
+</style></head>
+
+<body>
+  <div data-ad-slot="BLOG_TOP_BANNER" data-ad-type="full"></div>
+  <header>
+  <div class="dropdown-overlay"></div>
+  <div class="search-overlay mobile"></div>
+  <div class="wrapper">
+    <nav>
+      <div class="topbar">
+        <div class="logo">
+          <a href="https://decentraland.org/">
+            
+              <img width="36" height="36" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/logo-b57be10317666edc399e2bdf863f26bf.svg">
+            
+          </a>
+        </div>
+        <div class="dropdown-trigger">Blog <svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6">
+    <g fill="none" fill-rule="evenodd">
+        <path d="M-7-9h24v24H-7z"></path>
+        <path class="main" fill="#0D0D17" d="M5 6l4.756-4.6A.806.806 0 0 0 9.758.244.856.856 0 0 0 8.566.24L5 3.683 1.434.241A.856.856 0 0 0 .242.244.806.806 0 0 0 .244 1.4L5 6z"></path>
+    </g>
+</svg>
+</div>
+      </div>
+      <div class="dropdown-content">
+        <ul class="menu">
+          <li><a href="https://market.decentraland.org/">Marketplace</a></li>
+          <li><a href="https://builder.decentraland.org/">Builder</a></li>
+          <li><a href="https://docs.decentraland.org/">Docs</a></li>
+          <li><a href="https://events.decentraland.org/">Events</a></li>
+          <li><a href="https://dao.decentraland.org/">DAO</a></li>
+          <li><a href="https://decentraland.org/blog" class="active">Blog</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="header_search">
+      <div class="search-overlay desktop"></div>
+      <form action="https://decentraland.org/blog/search/" method="get">
+        <input type="text" name="q" placeholder="Search" autofocus="" autocomplete="off">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" class="search-icon">
+    <g fill="none" fill-rule="evenodd">
+        <path d="M-5-5v24h24V-5z"></path>
+        <path fill="#5C5C6E" fill-rule="nonzero" d="M12.003 13.657L8.96 10.616c-.016-.016-.027-.035-.042-.052a5.756 5.756 0 1 1 1.645-1.645c.017.015.036.026.052.042l3.041 3.042a1.17 1.17 0 0 1-1.654 1.654zM9.516 5.756a3.76 3.76 0 1 0-7.52 0 3.76 3.76 0 0 0 7.52 0z"></path>
+    </g>
+</svg>
+
+        <div class="loader"></div>
+        <div class="close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" class="close-icon">
+  <g fill="none" fill-rule="evenodd" transform="translate(-4 -4)">
+    <rect width="24" height="24"></rect>
+    <path fill="#5C5C6E" d="M4,12 C4,7.581722 7.581722,4 12,4 C16.418278,4 20,7.581722 20,12 C20,16.418278 16.418278,20 12,20 C7.581722,20 4,16.418278 4,12 Z M15.79284,15.8319127 L15.8319127,15.79284 C16.0550694,15.5696832 16.0550694,15.2078747 15.8319127,14.9847179 L12.8471947,12 L15.8319127,9.01528207 C16.0550694,8.79212533 16.0550694,8.43031677 15.8319127,8.20716003 L15.79284,8.16808733 C15.5696832,7.94493059 15.2078747,7.94493059 14.9847179,8.16808733 L12,11.1528053 L9.0152821,8.16808733 C8.7921253,7.94493059 8.4303168,7.94493059 8.20716,8.16808733 L8.1680873,8.20716003 C7.9449306,8.43031677 7.9449306,8.79212533 8.1680873,9.01528207 L11.1528053,12 L8.1680873,14.9847179 C7.9449306,15.2078747 7.9449306,15.5696832 8.1680873,15.79284 L8.20716,15.8319127 C8.4303168,16.0550694 8.7921253,16.0550694 9.0152821,15.8319127 L12,12.8471947 L14.9847179,15.8319127 C15.2078747,16.0550694 15.5696832,16.0550694 15.79284,15.8319127 Z"></path>
+  </g>
+</svg>
+
+        </div>
+        <input type="submit" value="Search" style="display: none;">
+      </form>
+      <ul class="search-results"></ul>
+    </div>
+  </div>
+</header>
+
+  <div class="navbar">
+  <div class="wrapper sticky">
+    <div class="categories">
+      <div class="dropdown">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <span>Tutorials</span>
+            
+            
+        
+        <div class="arrow"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5">
+  <g fill="none" fill-rule="evenodd" transform="translate(-7 -10)">
+    <rect width="24" height="24"></rect>
+    <path fill="#0D0D17" d="M7.99539757,10 C7.44565467,10 7.31277239,10.3127724 7.70577316,10.7057732 L11.2942268,14.2942268 C11.6840146,14.6840146 12.3127724,14.6872276 12.7057732,14.2942268 L16.2942268,10.7057732 C16.6840146,10.3159854 16.5443356,10 16.0046024,10 L7.99539757,10 Z"></path>
+  </g>
+</svg>
+</div>
+      </div>
+      <ul>
+        
+        <li>
+          <a href="https://decentraland.org/blog/">All articles</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="https://decentraland.org/blog/announcements/">Announcements</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="https://decentraland.org/blog/project-updates/">Project Updates</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="https://decentraland.org/blog/platform/">Platform</a>
+        </li>
+        
+        
+        
+        <li>
+          <a href="https://decentraland.org/blog/technology/">Technology</a>
+        </li>
+        
+        
+        
+        <li class="active">
+          <a href="https://decentraland.org/blog/tutorials/">Tutorials</a>
+        </li>
+        
+        
+      </ul>
+    </div>
+
+    <div class="authors">
+      <div class="dropdown">
+        <span>Authors</span>
+        <div class="arrow"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5">
+  <g fill="none" fill-rule="evenodd" transform="translate(-7 -10)">
+    <rect width="24" height="24"></rect>
+    <path fill="#0D0D17" d="M7.99539757,10 C7.44565467,10 7.31277239,10.3127724 7.70577316,10.7057732 L11.2942268,14.2942268 C11.6840146,14.6840146 12.3127724,14.6872276 12.7057732,14.2942268 L16.2942268,10.7057732 C16.6840146,10.3159854 16.5443356,10 16.0046024,10 L7.99539757,10 Z"></path>
+  </g>
+</svg>
+</div>
+      </div>
+      <ul>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/decentraland/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/icon-a8a83f015113c7531d71b8fb007d5cd0.png" alt="Decentraland">
+              
+              <span>Decentraland</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/governace-squad/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/icon-a8a83f015113c7531d71b8fb007d5cd0.png" alt="DAO Governance Squad">
+              
+              <span>DAO Governance Squad</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/fmiras/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/fmiras-67307c4812c9a76b336bfac2d2153bc8.jpg" alt="Federico Miras">
+              
+              <span>Federico Miras</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/cazala/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/cazala-ec1dc2811742d6ae7e06e12921588e73.jpg" alt="Juan Cazala">
+              
+              <span>Juan Cazala</span>
+            </a>
+          </li>
+        
+          
+          
+          <li class="active">
+          
+            <a href="https://decentraland.org/blog/author/nicoearnshaw/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/nicoearnshaw-4c76128a2fc5d8d0e19d1402add71de8.jpg" alt="Nico Earnshaw">
+              
+              <span>Nico Earnshaw</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/schallock/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/schallock-753974d2ea6ee74b3e7bd7787d51891e.jpg" alt="Eric Schallock">
+              
+              <span>Eric Schallock</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/eordano/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/eordano-218ba82633a44121cd2e209518448838.jpg" alt="Esteban Ordano">
+              
+              <span>Esteban Ordano</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/dbhvk/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/dbhvk-8203c3714f93adba06f9c69daeb5927b.jpg" alt="Daniel Belohlavek">
+              
+              <span>Daniel Belohlavek</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/tonysheng/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/tonysheng-357cfb44b11f4a404ecbbcbfd40d59ba.jpg" alt="Tony Sheng">
+              
+              <span>Tony Sheng</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/abarmat/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/abarmat-c761761db69d9ca77cadd9d54a8be49b.jpg" alt="Ariel Barmat">
+              
+              <span>Ariel Barmat</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/m3mnoch/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/m3mnoch-f89ce2af691602c888b2352c3908b7e2.jpg" alt="Christopher Chapman">
+              
+              <span>Christopher Chapman</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/twaldorf/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/twaldorf-d2df9c36494321cc8703ec3bad0675fa.jpg" alt="Trevor Waldorf">
+              
+              <span>Trevor Waldorf</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/nacho/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/nacho-09c7ed68b6c4ee12c2777f6e400ebfe8.jpg" alt="Ignacio Mazzara">
+              
+              <span>Ignacio Mazzara</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/arimeilich/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/arimeilich-5aa8bbf885a476084954977b5cc78021.jpg" alt="Ari Meilich">
+              
+              <span>Ari Meilich</span>
+            </a>
+          </li>
+        
+          
+          
+          <li>
+          
+            <a href="https://decentraland.org/blog/author/clarkkent/">
+              
+              
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/clarkkent-c93fcdb721b20e790f61c12c5b9e838d.jpg" alt="Clark Kent">
+              
+              <span>Clark Kent</span>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+
+  </div>
+</div>
+<main>
+    
+<article class="post-page">
+  
+    <div class="post__hero" style="background-image: url(&#39;/blog/images/static/images/tutorials-8fd50aced5ac6b68693d88b68055687d.jpg&#39;)"></div>
+  
+  <div class="wrapper content">
+    <div class="post__info">
+      <span class="post__date">
+        
+    
+    Jul
+    20, 2020
+
+
+      </span>
+      
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+          
+          
+      <a class="post__category" href="https://decentraland.org/blog/tutorials/">Tutorials</a>
+      <h1>Servers Deep Dive Part 2: Launching a Server</h1>
+      
+      <h2>Take your scene building to the next level by learning how you can build a server that a Decentraland scene can interact with.</h2>
+      <div class="post__author">
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+            <div class="author__info">
+              <a href="https://decentraland.org/blog/author/nicoearnshaw/">
+                <img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/nicoearnshaw.jpeg" alt="Nico Earnshaw" class="img-fluid">
+                <span>Nico Earnshaw</span>
+              </a>
+            </div>
+            
+        <div class="author__social">
+          <span>Share</span>
+          <a href="https://twitter.com/share?text=Servers+Deep+Dive+Part+2%3A+Launching+a+Server&amp;url=https://decentraland.org/blog/tutorials/servers-part-2/" onclick="window.open(this.href, &#39;share-twitter&#39;, &#39;width=550,height=235&#39;);return false;">
+            <svg width="20px" height="16px" viewBox="0 0 20 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="article" transform="translate(-301.000000, -664.000000)" fill="#0A0F1F" fill-rule="nonzero">
+                  <g transform="translate(16.000000, 656.000000)" id="share">
+                    <g transform="translate(227.000000, 4.000000)">
+                      <g id="tw" transform="translate(56.000000, 0.000000)">
+                        <path d="M21.3333333,5.90247802 C20.6706114,6.23820943 19.8974359,6.46203038 19.1242604,6.46203038 C19.8974359,6.01438849 20.5601578,5.23101519 20.7810651,4.33573141 C20.0078895,4.7833733 19.234714,5.11910472 18.3510848,5.23101519 C17.6883629,4.44764189 16.6942801,4 15.5897436,4 C13.4911243,4 11.7238659,5.79056755 11.7238659,7.91686651 C11.7238659,8.25259792 11.7238659,8.47641886 11.8343195,8.81215028 C8.63116371,8.70023981 5.75936884,7.13349321 3.8816568,4.7833733 C3.55029586,5.34292566 3.32938856,6.01438849 3.32938856,6.79776179 C3.32938856,8.14068745 3.99211045,9.37170264 5.09664694,10.0431655 C4.43392505,10.0431655 3.8816568,9.81934452 3.32938856,9.59552358 C3.32938856,11.4980016 4.65483235,13.0647482 6.42209073,13.4004796 C6.09072978,13.5123901 5.75936884,13.5123901 5.42800789,13.5123901 C5.20710059,13.5123901 4.98619329,13.5123901 4.65483235,13.4004796 C5.09664694,14.9672262 6.53254438,16.0863309 8.29980276,16.0863309 C6.97435897,17.0935252 5.31755424,17.764988 3.55029586,17.764988 C3.21893491,17.764988 2.88757396,17.764988 2.66666667,17.764988 C4.3234714,18.8840927 6.42209073,19.5555556 8.52071006,19.5555556 C15.5897436,19.5555556 19.4556213,13.6243006 19.4556213,8.47641886 C19.4556213,8.25259792 19.4556213,8.14068745 19.4556213,7.91686651 C20.1183432,7.46922462 20.7810651,6.68585132 21.3333333,5.90247802 Z" id="shape"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://decentraland.org/blog/tutorials/servers-part-2/" onclick="window.open(this.href, &#39;share-facebook&#39;,&#39;width=580,height=296&#39;);return false;">
+            <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <g id="Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="article" transform="translate(-339.000000, -664.000000)" fill="#0A0F1F" fill-rule="nonzero">
+                  <g transform="translate(16.000000, 656.000000)" id="share">
+                    <g transform="translate(227.000000, 4.000000)">
+                      <g id="fb" transform="translate(92.000000, 0.000000)">
+                        <path d="M4,5.77777778 C4,4.8 4.8,4 5.77777778,4 L18.2222222,4 C19.2,4 20,4.8 20,5.77777778 L20,18.2222222 C20,19.2 19.2,20 18.2222222,20 L5.77777778,20 C4.8,20 4,19.2 4,18.2222222 L4,5.77777778 Z M15.2,10.8444444 L15.2,9.77777778 C15.2,9.24444444 15.5555556,9.15555556 15.7333333,9.15555556 L17.2444444,9.15555556 L17.2444444,6.84444444 L15.2,6.84444444 C12.8888889,6.84444444 12.3555556,8.53333333 12.3555556,9.6 L12.3555556,10.7555556 L11.1111111,10.7555556 L11.1111111,12.3555556 L11.1111111,13.4222222 L12.4444444,13.4222222 L12.4444444,20 L15.0222222,20 L15.0222222,13.4222222 L16.9777778,13.4222222 L17.0666667,12.3555556 L17.2444444,10.7555556 L15.2,10.7555556 L15.2,10.8444444 Z" id="Combined-Shape"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="post__content">
+      <p>In <a href="https://decentraland.org/blog/tutorials/servers-part-1/">part 1</a> of this series we saw how our scene fetches data from an existing API. That’s going to be very valuable knowledge when we take things to the next level.</p>
+
+<p>Question: What if we mount our own API, and use that to store information that affects how the scene is displayed for other players who come in later?</p>
+
+<p>There are a number of services out there that you can use – many of them for free up to certain volumes, which in many cases might well be enough for using in a scene. Ultimately, if you want to handle a really high volume of users, you will likely have to pay a fee eventually. Some services offer storage, others processing power, some offer both together.</p>
+
+<p>A good option to get started is Google Firebase, since it has a friendly interface and provides both processing power and storage for free up to certain usage volumes. It also provides https encryption out of the box, which is one less thing to worry about.</p>
+
+<p>There are many other options out there, and just as many strong opinions about which are the best. Much has been written about it, and a lot of that applies just as much to Decentraland scenes as to typical web applications. Some other alternatives that you might want to try out are Heroku, Azure and Digital Ocean. Vercel Now (formerly known as Zeit Now) is free and a good option for running ‘serverless’ lambdas. It also comes with https support but doesn’t provide any data persistence, so for most scenarios you’ll want to pair it up with a storage service like Amazon S3, Azure Storage, Google Cloud Storage, DigitalOcean Spaces, etc.</p>
+
+<p>Through the majority of this post, we’ll be guiding you through an example using Firebase only. This is going to get a lot more hands on, so I recommend you roll up your sleeves and follow these steps to learn by doing!</p>
+
+<h3 id="guestbook-scene">Guestbook scene<a href="https://decentraland.org/blog/tutorials/servers-part-2/#guestbook-scene" class="anchor">#</a></h3>
+
+<p>We’ll be building an API to use on this simple example scene where players can read and sign a guestbook. When a player opens the guestbook, the scene needs to send out a request to our API, that should return the full list of players that have signed. When a player signs the book, the scene should send another request to our API so that their name is added to the book.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/crater-c6b277048c72013b731fd9ca07d74125.png" width="" height="" alt=""></p>
+
+<p>The scene is a tribute to all of those tourist trap locations that spoil the very thing they’re meant to be all about. The guestbook itself could of course be used in a non-ironic way anywhere else, feel free to copy it onto your own scenes if you want to have that functionality.</p>
+
+<p><a href="https://github.com/decentraland-scenes/Guest-Book-API">https://github.com/decentraland-scenes/Guest-Book-API</a></p>
+
+<h3 id="before-we-begin">Before we begin<a href="https://decentraland.org/blog/tutorials/servers-part-2/#before-we-begin" class="anchor">#</a></h3>
+
+<p>Let’s embark on a journey to create a Firebase server. But before you get started, make sure you have the following:</p>
+
+<ul>
+  <li><a href="https://www.getpostman.com/">Postman</a> installed</li>
+  <li>Have a Google account set up</li>
+</ul>
+
+<h3 id="create-a-firebase-project">Create a Firebase project<a href="https://decentraland.org/blog/tutorials/servers-part-2/#create-a-firebase-project" class="anchor">#</a></h3>
+
+<p>If you don’t have a <a href="https://firebase.google.com/">Firebase</a> account already, start by creating one. Go to the <a href="https://console.firebase.google.com/u/0/">Firebase console</a> and click <strong>Add Project</strong>.</p>
+
+<p>Give your project a name, and select a location to host it.</p>
+
+<h3 id="build-the-project-scaffolding">Build the project scaffolding<a href="https://decentraland.org/blog/tutorials/servers-part-2/#build-the-project-scaffolding" class="anchor">#</a></h3>
+
+<p>Install the <a href="https://firebase.google.com/docs/cli">Firebase CLI</a>, by running:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock1">npm <span class="nb">install</span> <span class="nt">-g</span> firebase-tools
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock1"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>Open your command line tool of choice and navigate to the folder where you want to create your server project. Once there, run <code class="language-plaintext highlighter-rouge">firebase init</code>.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/install-firebase-3b2e9ac8b2ac0daa419dc44c4d2bfd5b.png" width="" height="" alt=""></p>
+
+<p>Here you’ll be presented with various different services that are offered by Firebase. For this example all we really need is the <strong>Functions</strong> option. So hit <em>spacebar</em> to select <strong>Functions</strong> and then <em>enter</em> to continue.</p>
+
+<p>The CLI then presents some more questions:</p>
+
+<ul>
+  <li>Use an existing project and select the one you just created</li>
+  <li>Select <em>TypeScript</em> as a language, as this is what we’ll be using in this tutorial and in most example scenes</li>
+  <li>Linting is up to you. We recommended it unless you have something already configured that might be in conflict</li>
+  <li>Install the dependencies automatically</li>
+</ul>
+
+<p>Great! At this point we should have the project all set up and ready to start working. Take a look at the new files and folders that were created by this process. You should now see a <code class="language-plaintext highlighter-rouge">functions</code> folder with the following files in it:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">src/index.ts</code></li>
+  <li><code class="language-plaintext highlighter-rouge">package.json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">tsconfig.json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">node_modules</code> folder</li>
+  <li><code class="language-plaintext highlighter-rouge">lib</code> folder</li>
+</ul>
+
+<p>The only one of these files that we’ll be editing in this tutorial is the <code class="language-plaintext highlighter-rouge">index.ts</code> file. You can mostly ignore the rest – just know they’re there.</p>
+
+<h3 id="creating-a-first-endpoint">Creating a first endpoint<a href="https://decentraland.org/blog/tutorials/servers-part-2/#creating-a-first-endpoint" class="anchor">#</a></h3>
+
+<p>Inside our <code class="language-plaintext highlighter-rouge">index.ts</code> file, we’ll be using the popular Express library to mount a ‘serverless’ API.</p>
+
+<blockquote>
+  <p><strong>About ‘serverless’ APIs</strong>:
+What’s commonly referred to as a ‘serverless’ API can elicit some confusion, because you really are setting up a server, after all. What’s different between a ‘serverless’ API and a traditional server hosting, is that the environments where your code runs are completely managed by the provider, you just need to write your code, and not worry about things like updating the OS of the machine that runs it. It also means that you don’t have a machine or a portion of a machine that’s continually dedicated to running your code. Instead, a virtual machine is instanced on demand whenever your API endpoints are hit, and then when the work is done those resources are returned back to the sea of brain that they came from. This generally means cheaper hosting, since the service providers can pool resources with much more efficiency.</p>
+</blockquote>
+
+<p>We recommend changing the Node version used on the project to version 10. By default your project uses Node version 8, which works fine today, but will eventually be deprecated by Firebase. To change that, open <code class="language-plaintext highlighter-rouge">package.json</code> and edit the line that says <code class="language-plaintext highlighter-rouge">”node”: “8”</code> so that it says <code class="language-plaintext highlighter-rouge">”node”: “10”</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock2"><span class="nl">"engines"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+   </span><span class="nl">"node"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="w">
+ </span><span class="p">}</span><span class="w">
+</span></code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock2"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>Open the <code class="language-plaintext highlighter-rouge">index.ts</code> file and overwrite the default code with the following lines to create your first API endpoint:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock3"><span class="kd">const</span> <span class="nx">functions</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">firebase-functions</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">)</span>
+<span class="kd">const</span> <span class="nx">cors</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">cors</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">()</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">({</span> <span class="na">origin</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}))</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/hello-world</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">app</span> <span class="o">=</span> <span class="nx">functions</span><span class="p">.</span><span class="nx">https</span><span class="p">.</span><span class="nx">onRequest</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span>
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock3"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>This script relies on a couple of dependencies that must be installed, so on the terminal do <code class="language-plaintext highlighter-rouge">cd</code> to the <em>functions</em> folder, and then run the following commands:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock4">npm i express
+npm i cors
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock4"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>The first thing this code does is import three libraries:</p>
+
+<p><code class="language-plaintext highlighter-rouge">firebase-functions</code>: lets you create serverless functions to run on Firebase
+<code class="language-plaintext highlighter-rouge">express</code>: lets you create a server instance to handle the requests
+<code class="language-plaintext highlighter-rouge">cors</code>: Makes the content returned by your endpoints accessible to external sites (like Decentraland, for example)</p>
+
+<p>After that, we’re instancing an <a href="https://expressjs.com/en/guide/routing.html">Express router</a> to handle the routes of our endpoints, and we’re setting <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">CORS policies</a> so that the content returned by these endpoints is open to everyone.</p>
+
+<p>Then comes the more interesting part. <code class="language-plaintext highlighter-rouge">app.get('/hello-world', (req: any, res: any).</code> makes the Express router listen for <code class="language-plaintext highlighter-rouge">GET</code> HTTP requests to the <code class="language-plaintext highlighter-rouge">/hello-world</code> sub-url. It will run the function that follows every time it receives one of those requests. We’re also defining a <code class="language-plaintext highlighter-rouge">req</code> object, that contains all of the additional data in the request, and a <code class="language-plaintext highlighter-rouge">res</code> object, that will be sent as a response to the caller.</p>
+
+<p>Every time this endpoint is called, we return a <em>‘Hello World!’</em> string, with an HTTP status code of <code class="language-plaintext highlighter-rouge">200</code>, which is universally recognized as a success response.</p>
+
+<p>Finally, <code class="language-plaintext highlighter-rouge">exports.app = functions.https.onRequest(app)</code> exposes the express application to Firebase functions.</p>
+
+<p>We’re finally ready to try our app! We can run it locally by executing the following in the command line from the <em>functions</em> folder:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock5">npm run serve
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock5"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<blockquote>
+  <p>Note: If you have any issues with this step, in the <code class="language-plaintext highlighter-rouge">/functions</code> folder you’ll see two new files <code class="language-plaintext highlighter-rouge">firebase-debug.log</code> and <code class="language-plaintext highlighter-rouge">ui-debug.log</code> which include more verbose information than the log you see on console, these might be quite useful.</p>
+</blockquote>
+
+<p>Okay, so our API is running, but where? What’s the full address we need to call? The terminal responds with some info, including a localhost and a port of an emulator. If you’re thinking that’s it, you’re on the right path but not all the way there. Firebase makes the URL a bit of a mouthful to be honest. Here’s how you put it together:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock6">[&lt;------domain---&gt;]/[&lt;-app id-&gt;]/[&lt;-zone-&gt;]/app/[&lt;-endpoint-&gt;]
+http://localhost:5001/dcl-guestbook/us-central1/app/hello-world
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock6"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>You might be wondering what your app’s ID is, and you might not remember what zone you selected. But if you look closer at what the terminal responds, you’ll find a URL for an <em>Emulator UI</em>: <code class="language-plaintext highlighter-rouge">http://localhost:4000/functions</code>.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/local-server-35cca45a6a5899062e15a110d885d2bd.png" width="" height="" alt=""></p>
+
+<p>Paste that into a browser tab and you’ll find the full path to your API.</p>
+
+<p>You can also look up your app ID and deployment zone in your <em>Project settings</em> page:</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/project-settings-c85de43d61ee67d4874daeb88a94917c.png" width="" height="" alt=""></p>
+
+<p>So now we can use Postman to send a <em>GET</em> request to our newly exposed API, at <a href="http://localhost:5001/dcl-door/us-east1/app/hello-world">http://localhost:5001/dcl-door/us-east1/app/hello-world</a> (or, since this is a simple <em>GET</em> request, you could also just use a browser). Remember that the address may differ depending on your project name or region.</p>
+
+<p>Upon sending the request, you should see that our server responds to Postman with <em>Hello World!</em>.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/postman-hello-160f96e163c852e42538c954372df423.png" width="" height="" alt=""></p>
+
+<p>If you made it this far, congratulations – you already have your server running!</p>
+
+<h3 id="set-up-the-database">Set up the database<a href="https://decentraland.org/blog/tutorials/servers-part-2/#set-up-the-database" class="anchor">#</a></h3>
+
+<p>The reason why we are creating a server is to be able to store and retrieve data that other players uploaded. For that we’ll need a database.</p>
+
+<p>Firebase offers two different options: a traditional database called <em>Realtime database</em>, and a <a href="https://en.wikipedia.org/wiki/NoSQL">NoSQL</a> database called <em>Cloud Firestore</em>. For this tutorial we’ll go with <em>Cloud Firestore</em>.</p>
+
+<blockquote>
+  <p><strong>About NoSQL Databases:</strong>
+In a NoSQL database, data is stored in <em>documents</em> inside <em>collections</em>, and each document can have a different structure from others, so they don’t necessarily fit into the columns and rows of a table like a traditional SQL database and because of that they tend to be more lightweight and to perform better.</p>
+</blockquote>
+
+<p>Go to your project page on Firebase and open the <em>Database</em> tab. Click <em>Create database</em> to create your initial database.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/create-database-861e0d202b452cc3e8f18eed9dcdddf5.png" width="" height="" alt=""></p>
+
+<p>Select ‘Start in test mode’ to enable all reads and writes easily. Also, select a region for hosting the database, which can be the same region where you host the app or not.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/create-database2-8da9762ebf7ab821a24a4186d84a549d.jpg" width="" height="" alt=""></p>
+
+<p>Remember that our functions server runs as a serverless ephemeral thing that only exists while someone hits its endpoints – and that will be a separate machine from the Firestore database which will hold persistent data. Any requests that need to go from the functions server machine to the db server machine need to be authenticated somehow.</p>
+
+<p>We could configure our database so that different users with Google accounts can edit the data in it, but that’s not going to be of any use to us since players aren’t going to do a login to their Google account from inside Decentraland. What we need instead is to create a <em>Service account</em>. A Service account is a fake user that is used for app-to-app communication. Our functions server is going to impersonate that user when it connects to the Firestore database.</p>
+
+<p>We’re going to create a Service account, retrieve its keys and store those in our project.</p>
+
+<p>Go to your app in the Firebase Console, click the little gearbox and select <em>Users and permissions</em>. Then open the <em>Service accounts</em> tab.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/users-and-permissions-7efedfbdcb37c5c0b88e2515fcaaed26.png" width="" height="" alt=""></p>
+
+<p>In this screen, keep the <code class="language-plaintext highlighter-rouge">Node.js</code> option selected and click <em>Generate new private key</em>. This will download a <em>.json</em> file to your computer with the secret credentials for this service account.</p>
+
+<p>Copy this file into your project folder and rename it if you wish. Make sure you don’t share the service account credentials publicly anywhere. In this case, I added this file to the <code class="language-plaintext highlighter-rouge">.gitignore</code> file, so that it doesn’t get uploaded to the GitHub repo.</p>
+
+<p>Then, back on the <em>Service Accounts</em> page, you’ll note that there’s a really helpful snippet of code written out wich already points to your database’s URL. You can copy those lines of code straight into the end of your <code class="language-plaintext highlighter-rouge">index.ts</code> file, and that’s all you need to make this work! Just make sure that the path to the <em>.json</em> file with the keys matches where you’re really storing the file.</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock7"><span class="kd">var</span> <span class="nx">admin</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">firebase-admin</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="nx">serviceAccount</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">path/to/serviceAccountKey.json</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">admin</span><span class="p">.</span><span class="nx">initializeApp</span><span class="p">({</span>
+  <span class="na">credential</span><span class="p">:</span> <span class="nx">admin</span><span class="p">.</span><span class="nx">credential</span><span class="p">.</span><span class="nx">cert</span><span class="p">(</span><span class="nx">serviceAccount</span><span class="p">),</span>
+  <span class="na">databaseURL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://dcl-door.firebaseio.com</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">})</span>
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock7"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>These lines of code import the Firebase module that takes care of permissions, then it loads your credentials file and initializes an authenticated application that we can later use in our code.</p>
+
+<p>We’ll add one more line of code after that, which initiates an authenticated <code class="language-plaintext highlighter-rouge">db</code> object to interface with Firestore.</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock8"><span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">admin</span><span class="p">.</span><span class="nx">firestore</span><span class="p">()</span>
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock8"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>Now let’s return to the <code class="language-plaintext highlighter-rouge">Database</code> tab of our project dashboard on Firebase. We’ll create our first document of data manually. Remember, in a NoSQL database, data is stored into <em>collections</em>, and each contains a list of <em>documents</em>. In our case, each signature will be stored as its own document, containing a <em>name</em> and an <em>id</em> field. These documents will all belong to a single collection.</p>
+
+<p>Click <em>Start collection</em>, and name your collection <em>Signatures</em>, then create a first signature in that collection. Click <em>AutoID</em> to generate a random string for a doc ID, and give it two fields of type <em>string</em>: <em>id</em> and <em>name</em>.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/firestore-data1-e5edfa7d12d9efddfba7f612cd19dec0.png" width="" height="" alt=""></p>
+
+<h3 id="make-database-calls">Make database calls<a href="https://decentraland.org/blog/tutorials/servers-part-2/#make-database-calls" class="anchor">#</a></h3>
+
+<p>With this we are ready to start building the real functionality that we had set out to build. There’s essentially two things we need to do:</p>
+
+<ol>
+  <li>Retrieve the list of signatures when someone reads the book</li>
+  <li>Store a new signature when someone signs the book</li>
+</ol>
+
+<p>Add the following code to <code class="language-plaintext highlighter-rouge">index.ts</code>, to handle those two actions:</p>
+
+<div class="language-ts highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock9"><span class="kd">let</span> <span class="nx">signatures</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">Signatures</span><span class="dl">'</span><span class="p">)</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/get-signatures</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="na">response</span><span class="p">:</span> <span class="kr">any</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">await</span> <span class="nx">signatures</span><span class="p">.</span><span class="kd">get</span><span class="p">().</span><span class="nx">then</span><span class="p">((</span><span class="na">queryResult</span><span class="p">:</span> <span class="p">{</span> <span class="na">docs</span><span class="p">:</span> <span class="kr">any</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">doc</span> <span class="k">of</span> <span class="nx">queryResult</span><span class="p">.</span><span class="nx">docs</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">response</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">doc</span><span class="p">.</span><span class="nx">data</span><span class="p">())</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/add-signature</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">newSignature</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">signatures</span>
+      <span class="p">.</span><span class="nx">doc</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100000</span><span class="p">)</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">newSignature</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="nx">newSignature</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="p">})</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">200</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="dl">'</span><span class="s1">Signed book!</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock9"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<blockquote>
+  <p>TIP: If you’re not familiar with some of the syntax here, we explain what <code class="language-plaintext highlighter-rouge">try</code>, <code class="language-plaintext highlighter-rouge">catch</code>, <code class="language-plaintext highlighter-rouge">async</code> and <code class="language-plaintext highlighter-rouge">await</code> mean in the previous post of this series. You can also find info about Firebase’s API in <a href="https://firebase.google.com/docs/firestore/query-data/get-data">their documentation</a>.</p>
+</blockquote>
+
+<p>The first line here retrieves an object that represents the <code class="language-plaintext highlighter-rouge">Signatures</code> collection that we created through the UI. We’ll use this object to read and write to this collection. We then create two new endpoints, one listens for GET requests on <code class="language-plaintext highlighter-rouge">/get-signatures</code>, the other listens for POST requests on <code class="language-plaintext highlighter-rouge">/add-signature</code>, and we define functions to run on each of the two events.</p>
+
+<p>The first of the two endpoints runs a query on the db to get all of the docs in the collection, then packs all of these into an array that it sends back in the response message.</p>
+
+<p>Let’s start up our server again with <code class="language-plaintext highlighter-rouge">npm run serve</code> and give it a try…</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/postman-response-b2a3ad57c1873a4b2428b0835182f538.png" width="" height="" alt=""></p>
+
+<p>The response we get is a list of a single item, the one we added earlier through the UI.</p>
+
+<p>The second endpoint expects the incoming request to have a body containing the user ID and name. This information comes into our function through the <code class="language-plaintext highlighter-rouge">req</code> object, so we can easily pick it up doing <code class="language-plaintext highlighter-rouge">let newSignature = req.body</code>. We then create a new document for the signatures collection, giving it a random number as an ID and populating it with the data from the request body.</p>
+
+<p>When calling this endpoint through Postman, we need to remember to set <em>POST</em> as the method, and write data into the <em>Body</em> of the request.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/postman-post-772032761c00bb68c67187b1bb14f41b.png" width="" height="" alt=""></p>
+
+<p>If it all goes well, we get a response that says “Signed book!” If we now do another request to the <code class="language-plaintext highlighter-rouge">/get-signatures</code> endpoint, we should see both our entries.</p>
+
+<p>One cool feature from Firebase is that if we go to our project’s Database tab, you can see new data being updated in real time in the UI. So if we open that screen, we should see both documents listed there.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/firestore-data2-0e1e0d4d141ec82d63bfe38074c1717d.png" width="" height="" alt=""></p>
+
+<h3 id="deploy-the-server">Deploy the server<a href="https://decentraland.org/blog/tutorials/servers-part-2/#deploy-the-server" class="anchor">#</a></h3>
+
+<p>All of our functions work perfectly when running them locally through <code class="language-plaintext highlighter-rouge">npm run serve</code>. Now there’s one last step remaining: deploying our server to the cloud! All you have to do is run this on the console:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock10">firebase deploy
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock10"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>The URLs to reach your endpoints are now different. Once again, Firebase makes the URL structure a bit of a mouthful. This is how you build one:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="light-theme"><code id="codeblock11"><span class="o">[</span>&lt;<span class="nt">---zone</span> + app <span class="nb">id</span> + cloudfunctions.net-----&gt;]/app/[&lt;<span class="nt">--endpoint--</span><span class="o">&gt;]</span>
+https://us-central1-dcl-guestbook.cloudfunctions.net/app/hello-world
+</code></pre><div class="copy-code"><button class="codeblock-btn" data-clipboard-target="#codeblock11"><span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"></path><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"></path></g></svg> Copy code</span><span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"></path><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"></path></g></svg> Copied</span></button></div></div></div>
+
+<p>You can also check what the full URL looks like if you open the Functions tab in your project’s Firebase dashboard.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/server-url-71dd84a968d35c255594d4417da5e945.png" width="" height="" alt=""></p>
+
+<p>Test out the new path of your endpoints on Postman to make sure everything works as expected.</p>
+
+<p>You can now start building your scene around this API. We won’t cover that in this tutorial, but it shouldn’t be too different from what we covered in <a href="https://decentraland.org/blog/tutorials/servers-part-1/">Part 1</a> of this series.</p>
+
+<p>You can also look at what we’ve done in the project repo:
+<a href="https://github.com/decentraland-scenes/Guest-Book-API">github.com/decentraland-scenes/Guest-Book-API</a></p>
+
+<h3 id="leaderboard-example-scene">Leaderboard example scene<a href="https://decentraland.org/blog/tutorials/servers-part-2/#leaderboard-example-scene" class="anchor">#</a></h3>
+
+<p>Check out this other example scene. It’s quite similar but slightly more elaborate and might be exactly what you need for your scene. Feel free to borrow any bits of code you want from it!</p>
+
+<p><a href="https://github.com/decentraland-scenes/Leader-Board">github.com/decentraland-scenes/Leader-Board</a></p>
+
+<h3 id="combine-firebase-with-another-storage-service">Combine Firebase with another storage service<a href="https://decentraland.org/blog/tutorials/servers-part-2/#combine-firebase-with-another-storage-service" class="anchor">#</a></h3>
+
+<p>For Genesis Plaza, we used something similar when it came to displaying messages that were written by players on the tower. We used Firebase to expose our endpoints but we actually did the storing of data on an Amazon S3 server rather than on Firebase’s Firestore service. Requests to change the data go through our Firebase server, but then when players fetch data to read, they get that straight from the Amazon S3 server.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/tower-f2cbf5b3e8c7a1ee81a6863794663a57.png" width="" height="" alt=""></p>
+
+<p>Why do this? Firebase is a pretty good solution, but an Amazon S3 server is more robust and also remains a cheaper solution when dealing with many requests. Although we can read the data of a <em>.json</em> file in the S3 server directly from a Decentraland scene, we can’t write to it directly from the scene. This is because you need Amazon credentials to do the writing and we don’t recommend keeping those in a scene’s code as they’re not entirely safe there, so we handle that part from our Firebase server.</p>
+
+<p>Check out the repo for the Plaza:
+<a href="https://github.com/decentraland-scenes/Genesis-Plaza">github.com/decentraland-scenes/Genesis-Plaza</a></p>
+
+<h3 id="combine-a-server-with-the-message-bus">Combine a server with the Message Bus<a href="https://decentraland.org/blog/tutorials/servers-part-2/#combine-a-server-with-the-message-bus" class="anchor">#</a></h3>
+
+<p>Instead of having players polling for new values in the server every couple of seconds, you could instead combine using the server and the scene Message Bus. We’ve covered how we use the MessageBus on <a href="https://decentraland.org/blog/announcements/creating-genesis-plaza-part-1/">this blogpost about Genesis Plaza</a>. With this approach, you can reduce the number of requests that get sent to your server and you can keep players in much better sync with what each other is doing.</p>
+
+<p><a href="https://decentraland.org/blog/tutorials/servers-part-2/github.com/decentraland-scenes/Zenquencer">github.com/decentraland-scenes/Zenquencer</a></p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/zenquencer-d7d79c3c99b520ed4ce04c2c4d291b8e.png" width="" height="" alt=""></p>
+
+<p>In this example you can play with a sequencer to write out some musical patterns and then play them back. When a player comes into the scene they download the latest pattern from off the server. Then, as different players that are there change the pattern, they get these changes from each other using the Message Bus, they don’t need to check the server regularly to know what’s new.</p>
+
+<p>For this to work properly, we need to keep a separate version of this pattern for each realm and know what realm each player is on when they update the pattern. This is because only players that are in the same realm message each other via the Message Bus. There would otherwise be odd inconsistencies in what the pattern ends up being when players that are in different realms modify the same pattern without notifying each other. The scene includes the player’s realm as part of the requests it sends, and the server then handles a different <em>.json</em> file depending on the realm.</p>
+
+<p>Another noteworthy thing we’re doing in this example is that changes aren’t sent to the server right away, but instead we do a little buffer using the <code class="language-plaintext highlighter-rouge">utils.Delay</code> component, so that if the player changes several notes in quick succession, the server only gets notified of the final state of the pattern. This helps reduce the number of requests that the server needs to handle. For it to work, each update request needs to send the full state of the pattern, rather than just the changed elements.</p>
+
+<p>This other example includes a mural where pixels can be painted different colors. It uses the Message Bus and server very much in the same way as the sequencer we just shared.</p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/mural-4b2382b033876800763d15bcea594b5e.jpg" width="" height="" alt=""></p>
+
+<p><a href="https://decentraland.org/blog/tutorials/servers-part-2/github.com/decentraland-scenes/mural-example-scene">github.com/decentraland-scenes/mural-example-scene</a></p>
+
+<p>Here’s an even cooler example that lets you build with placing 3D voxels. From the server’s point of view, it’s really quite similar to the mural, except that it deals with 3D coordinates rather than 2D coordinates.</p>
+
+<p><a href="https://github.com/decentraland-scenes/voxel-art-creator">github.com/decentraland-scenes/voxel-art-creator</a></p>
+
+<p><img src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/voxel-editor-86b295a42c8ae75b0d49c5979dcfd0cf.png" width="" height="" alt=""></p>
+
+<blockquote>
+  <p><strong>A note about security:</strong>
+None of the examples we have shared implement any security measures against malicious use of the APIs. Players are capable of sending fake requests to these APIs if they want to. There isn’t a lot to worry about in these examples, since it would be pretty harmless if someone did that. But if, for example, we were automatically sending an NFT reward to players who reached a certain score on a scoreboard API, then that could be abused.</p>
+</blockquote>
+
+<blockquote>
+  <p>You could easily add a security key, so that the scene uses that key when calling the API, but that wouldn’t add a lot of security, since players can obtain that key from the scene’s code. They could also pick it from viewing outgoing HTTP requests in the <em>Network</em> tab in the browser console.</p>
+</blockquote>
+
+<blockquote>
+  <p>Ideally, you should run validations on the server side. You could, for example, keep track of various events that happen in your game and only send a reward to players that have gone through all of those before requesting for the reward. That’s still hackable, but if they can’t see the code of the server, they won’t know what validations they need to pass and it gets to the point where it’s easier to play legitimately than to look for ways to cheat.</p>
+</blockquote>
+
+<p><strong>This was a long post, but we hope that you find yourselves equipped with new tools that enable you to create new exciting experiences in Decentraland!</strong></p>
+
+<p><strong>Stay tuned for part 3 of this series, where we’ll discuss using Websockets servers for creating multiplayer experiences with a much more fluid and real-time feel.</strong></p>
+
+    </div></div>
+  <div class="post__related">
+    <div class="wrapper">
+      
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+          
+      
+      <h2>Related Articles</h2>
+      <div class="post-grid">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="post">
+          <a href="https://decentraland.org/blog/tutorials/servers-part-3/">
+            
+            
+              <div class="post__image" style="background-image: url(&#39;/blog/images/static/images/tutorials-8fd50aced5ac6b68693d88b68055687d.jpg&#39;)"></div>
+            
+          </a>
+          <div class="post__info">
+            <span class="post__date">
+              
+    
+    Aug
+    25, 2020
+
+
+            </span>
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                
+                
+            <span class="post__category">
+              <a href="https://decentraland.org/blog/tutorials/">Tutorials</a>
+            </span>
+            <h3>
+              <a href="https://decentraland.org/blog/tutorials/servers-part-3/">Servers Deep Dive Part 3: Using WebSockets</a>
+            </h3>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="post">
+          <a href="https://decentraland.org/blog/tutorials/servers-part-1/">
+            
+            
+              <div class="post__image" style="background-image: url(&#39;/blog/images/static/images/tutorials-8fd50aced5ac6b68693d88b68055687d.jpg&#39;)"></div>
+            
+          </a>
+          <div class="post__info">
+            <span class="post__date">
+              
+    
+    Jul
+    14, 2020
+
+
+            </span>
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                
+                
+            <span class="post__category">
+              <a href="https://decentraland.org/blog/tutorials/">Tutorials</a>
+            </span>
+            <h3>
+              <a href="https://decentraland.org/blog/tutorials/servers-part-1/">Servers Deep Dive Part 1: Hit an API</a>
+            </h3>
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        <div class="post">
+          <a href="https://decentraland.org/blog/tutorials/creator-genesis-plaza-part-2/">
+            
+            
+              <div class="post__image" style="background-image: url(&#39;/blog/images/static/images/genesisplaza-isometricblue-dac28d62a362ccc87c14caf890b39c60.jpg&#39;)"></div>
+            
+          </a>
+          <div class="post__info">
+            <span class="post__date">
+              
+    
+    Jun
+    30, 2020
+
+
+            </span>
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+                
+                
+            <span class="post__category">
+              <a href="https://decentraland.org/blog/tutorials/">Tutorials</a>
+            </span>
+            <h3>
+              <a href="https://decentraland.org/blog/tutorials/creator-genesis-plaza-part-2/">Creating Genesis Plaza: Part 2</a>
+            </h3>
+          </div>
+        </div>
+        
+        
+        
+          
+      </div>
+      
+    </div>
+  </div>
+  <div class="post__comments">
+    <div class="wrapper">
+      
+        
+<section class="post-full-comments">
+  <div id="disqus_thread"><iframe id="dsq-app1355" name="dsq-app1355" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" title="Disqus" width="100%" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/saved_resource.html" style="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 0px !important;" horizontalscrolling="no" verticalscrolling="no"></iframe><div dir="ltr" style="overflow: hidden;"><svg style="background: url(&quot;https://c.disquscdn.com/next/embed/assets/img/disqus-social-icon-dark.a621bea3e02c9fa04fd3965a3d6f424d.svg&quot;) center center / contain no-repeat; display: block; margin: auto; width: 80px; height: 80px;"></svg><p align="center">Disqus seems to be taking longer than usual. <a href="https://decentraland.org/blog/tutorials/servers-part-2/#" onclick="DISQUS.reset({reload: true}); return false;">Reload</a>?</p></div></div>
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://decentraland.org/blog/tutorials/servers-part-2/';
+      this.page.identifier = 'Decentraland - Servers Deep Dive Part 2: Launching a Server';
+    };
+    (function () {
+      var d = document,
+        s = d.createElement('script');
+      s.integrity = 'sha384-6iWp+YkfP4sxtgTaahBsrXJGlu5lzkwaR4JBMwg8bMNSZkCy/psEq70E4v2L4EvQ'
+      s.src = '/blog/js/libs/disqus/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+</section>
+
+      
+    </div>
+  </div>
+  <div class="wrapper">
+    <div class="newsletter">
+  <div class="container">
+    <div class="first-step">
+      <div class="newsletter__content">
+        <h2 class="newsletter__small-title">Developers newsletter</h2>
+        <p class="newsletter__title">Subscribe to the latest news about Decentraland</p>
+      </div>
+      <form action="https://decentraland.org/blog/tutorials/servers-part-2/" class="form newsletter__form">
+        <input type="email" class="form-control" id="email" placeholder="mail@domain.com">
+        <button class="btn" type="submit" id="subscribe" disabled="">Subscribe</button>
+      </form>
+    </div>
+    <div class="newsletter__form-sent">
+      <h2 class="newsletter__title">Thank you for subscribing!</h2>
+      <p>You will be up to date with every Decentraland news!</p>
+    </div>
+  </div>
+</div>
+
+    <div class="social-networks">
+  <ul>
+    <li>
+      <a href="https://dcl.gg/discord">
+        <div class="image">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="29" viewBox="0 0 40 29">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M-4-10h48v48H-4z"></path>
+              <path fill="#0D0D17" fill-rule="nonzero" d="M14.48 0c-.53.002-4.917.129-9.544 3.62 0 0-4.936 9.018-4.936 20.123 0 0 2.88 5.013 10.454 5.257 0 0 1.268-1.532 2.297-2.855-4.353-1.323-5.999-4.073-5.999-4.073s.343.244.96.592c.034 0 .069.035.137.07.103.07.206.104.309.174.857.487 1.713.87 2.502 1.183 1.405.592 3.085 1.114 5.038 1.497 2.571.488 5.587.662 8.878.035 1.61-.313 3.256-.766 4.97-1.497a19.5 19.5 0 0 0 3.942-2.054s-1.714 2.82-6.204 4.108a270.224 270.224 0 0 0 2.262 2.785C37.12 28.722 40 23.708 40 23.743c0-11.105-4.936-20.122-4.936-20.122C30.163-.104 25.467 0 25.467 0l-.48.556c5.827 1.776 8.535 4.387 8.535 4.387a28.178 28.178 0 0 0-10.317-3.307 28.558 28.558 0 0 0-6.924.07c-.206 0-.377.034-.583.069-1.2.14-4.113.557-7.78 2.193-1.268.557-2.023.975-2.023.975s2.811-2.75 8.98-4.526L14.534 0h-.054zm-.872 12.847c1.953 0 3.53 1.705 3.496 3.829 0 2.124-1.543 3.83-3.496 3.83-1.92 0-3.497-1.706-3.497-3.83s1.543-3.83 3.497-3.83zm12.51 0c1.92 0 3.496 1.705 3.496 3.829s-1.542 3.83-3.496 3.83c-1.92 0-3.496-1.706-3.496-3.83s1.542-3.83 3.496-3.83z"></path>
+            </g>
+          </svg>
+        </div>
+        <span>Join us on <strong>Discord</strong></span>
+      </a>
+    </li>
+    <li>
+      <a href="https://twitter.com/decentraland">
+        <div class="image">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="30" viewBox="0 0 36 30">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M-6-9h48v48H-6z"></path>
+              <path fill="#0D0D17" fill-rule="nonzero" d="M36 3.67c-1.278.647-2.77 1.078-4.26 1.078 1.49-.863 2.769-2.374 3.195-4.1-1.491.863-2.982 1.51-4.686 1.726C28.97.864 27.053 0 24.923 0c-4.047 0-7.456 3.453-7.456 7.554 0 .647 0 1.08.213 1.727-6.177-.216-11.716-3.238-15.337-7.77a7.527 7.527 0 0 0-1.065 3.885c0 2.59 1.278 4.964 3.408 6.259-1.278 0-2.343-.432-3.408-.864 0 3.67 2.556 6.691 5.965 7.338-.64.216-1.279.216-1.918.216-.426 0-.852 0-1.49-.216.851 3.022 3.62 5.18 7.029 5.18-2.556 1.943-5.752 3.238-9.16 3.238H0C3.195 28.705 7.243 30 11.29 30c13.633 0 21.089-11.439 21.089-21.367V7.554C33.657 6.691 34.935 5.18 36 3.669z"></path>
+            </g>
+          </svg>
+        </div>
+        <span>Follow us on <strong>Twitter</strong></span>
+      </a>
+    </li>
+    <li>
+      <a href="https://t.me/decentralandTG">
+        <div class="image">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="31" viewBox="0 0 36 31">
+            <g fill="none" fill-rule="evenodd">
+              <path d="M-6-9h48v48H-6z"></path>
+              <path fill="#0D0D17" fill-rule="nonzero" d="M.636 14.864l8.295 3.062 3.21 10.213a.98.98 0 0 0 1.552.462l4.623-3.729a1.392 1.392 0 0 1 1.682-.046l8.34 5.988c.574.413 1.387.102 1.531-.584l6.11-29.065c.157-.75-.588-1.375-1.31-1.098L.627 13.055c-.84.32-.833 1.497.01 1.81zm10.988 1.432l16.212-9.875c.291-.177.591.213.341.442l-13.38 12.3a2.733 2.733 0 0 0-.859 1.642l-.456 3.34c-.06.446-.694.49-.818.059l-1.753-6.091c-.2-.695.092-1.437.713-1.817z"></path>
+            </g>
+          </svg>
+        </div>
+        <span>Join us on <strong<>Telegram</strong<></span>
+      </a>
+    </li>
+    <li>
+      <a href="https://developers.decentraland.org/">
+        <div class="image">
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="40" viewBox="0 0 36 40">
+            <g fill="none" fill-rule="evenodd" transform="translate(-6 -4)">
+              <rect width="48" height="48"></rect>
+              <path fill="#0A0F1F" fill-rule="nonzero" d="M41.9834938,13.218707 C41.9834938,13.0701513 41.9504814,12.9215956 41.8844567,12.781293 C41.7524072,12.5006878 41.4965612,12.3108666 41.215956,12.2530949 L24.4044017,4.09903714 C24.1320495,3.96698762 23.8101788,3.96698762 23.5378267,4.09903714 L6.56121045,12.3273728 C6.23108666,12.4841816 6.01650619,12.8143054 6,13.1856946 L6,13.1939477 C6,13.2022008 6,13.2104539 6,13.2269601 L6,33.8762036 C6,34.2558459 6.21458047,34.6024759 6.56121045,34.7675378 L23.5378267,42.9958735 C23.5460798,42.9958735 23.5460798,42.9958735 23.5543329,43.0041265 C23.5790922,43.0123796 23.6038514,43.0206327 23.6286107,43.0371389 C23.6368638,43.0371389 23.6451169,43.045392 23.6616231,43.045392 C23.6863824,43.0536451 23.7111417,43.0618982 23.735901,43.0701513 C23.7441541,43.0701513 23.7524072,43.0784044 23.7606602,43.0784044 C23.7854195,43.0866575 23.8184319,43.0866575 23.8431912,43.0949106 C23.8514443,43.0949106 23.8596974,43.0949106 23.8679505,43.0949106 C23.9009629,43.0949106 23.9422283,43.1031637 23.9752407,43.1031637 C24.0082531,43.1031637 24.0495186,43.1031637 24.0825309,43.0949106 C24.090784,43.0949106 24.0990371,43.0949106 24.1072902,43.0949106 C24.1320495,43.0949106 24.1650619,43.0866575 24.1898212,43.0784044 C24.1980743,43.0784044 24.2063274,43.0701513 24.2145805,43.0701513 C24.2393398,43.0618982 24.264099,43.0536451 24.2888583,43.045392 C24.2971114,43.045392 24.3053645,43.0371389 24.3218707,43.0371389 C24.34663,43.0288858 24.3713893,43.0206327 24.3961486,43.0041265 C24.4044017,43.0041265 24.4044017,43.0041265 24.4126547,42.9958735 L41.4387895,34.7427785 C41.7771664,34.5777166 42,34.2310867 42,33.8514443 L42,13.2434663 C41.9834938,13.2352132 41.9834938,13.2269601 41.9834938,13.218707 Z M23.9669876,6.08803301 L38.6905089,13.2269601 L33.2682256,15.8596974 L18.5447043,8.72077029 L23.9669876,6.08803301 Z M23.9669876,20.3658872 L9.2434663,13.2269601 L16.2751032,9.81843191 L30.9986245,16.957359 L23.9669876,20.3658872 Z M7.98074278,14.8198074 L22.9766162,22.090784 L22.9766162,40.519945 L7.98074278,33.2489684 L7.98074278,14.8198074 Z M24.957359,40.519945 L24.957359,22.090784 L31.997249,18.6740028 L31.997249,23.4938102 C31.997249,24.0385144 32.4429161,24.4841816 32.9876204,24.4841816 C33.5323246,24.4841816 33.9779917,24.0385144 33.9779917,23.4938102 L33.9779917,17.7083906 L40.002751,14.786795 L40.002751,33.215956 L24.957359,40.519945 Z"></path>
+            </g>
+          </svg>
+        </div>
+        <span>Get started with our <strong>SDK</strong></span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+  </div>
+</article>
+
+  </main>
+  <footer>
+	<div class="footer-wrapper">
+		<div class="lang-nav-wrapper">
+			<div class="footer-lang-selector">
+        <div class="lang-flag en"></div>
+        <select name="lang-selector" id="lang">
+          <option value="en" selected="">English</option></select>
+			</div>
+			<nav class="footer-nav">
+				<ul>
+					<li><a href="https://decentraland.org/" target="_blank">Home</a></li>
+          <li><a href="https://decentraland.org/legal" target="_blank">Legal Information</a></li>
+					<li><a href="https://decentraland.org/press" target="_blank">Press Kit</a></li>
+				</ul>
+			</nav>
+		</div>
+		<div class="social-copyright-wrapper">
+			<ul class="footer-links">
+				
+					<li><a target="_blank" href="https://dcl.gg/discord" class="Discord-icon">
+						
+							
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+      <g fill="none">
+        <rect width="22" height="22" fill="#676370" rx="11"></rect>
+        <path fill="#FFF" d="M5.0677998,1.36000287e-05 C4.8822277,0.000761200029 3.34704426,0.0443327002 1.72750578,1.24773952 C1.72750578,1.24773952 0,4.35487581 0,8.18178463 C0,8.18178463 1.00769549,9.90927375 3.65893934,9.99324995 C3.65893934,9.99324995 4.10281088,9.46539815 4.46270818,9.00952847 C2.93914264,8.55365809 2.3633099,7.60596477 2.3633099,7.60596477 C2.3633099,7.60596477 2.4833011,7.68992641 2.69923962,7.80989241 C2.71123608,7.80989241 2.7231967,7.82187053 2.7471899,7.83386741 C2.78317956,7.85786019 2.8191807,7.86985875 2.8551705,7.89385167 C3.15508494,8.06180379 3.45498972,8.19378319 3.7309111,8.30175301 C4.22277072,8.50569507 4.8106212,8.68562615 5.49442614,8.81758875 C6.39416918,8.98554115 7.44984898,9.04551491 8.60152062,8.82957625 C9.16535998,8.72160713 9.74123178,8.56566883 10.3410607,8.31374051 C10.7609405,8.15778485 11.2287902,7.92987255 11.7206494,7.60596477 C11.7206494,7.60596477 11.120831,8.57768909 9.54927932,9.02156259 C9.9091769,9.46543553 10.3410607,9.98126231 10.3410607,9.98126231 C12.9923042,9.89728709 14,8.16978775 14,8.18178463 C14,4.35487581 12.2724939,1.24773952 12.2724939,1.24773952 C10.5569839,-0.0358942998 8.91342886,0.000106700029 8.91342886,0.000106700029 L8.74551048,0.192046422 C10.7849293,0.803871902 11.7326367,1.70363743 11.7326367,1.70363743 C10.4849923,1.031829 9.26136876,0.695901242 8.121694,0.563938922 C7.25794034,0.467966262 6.43014414,0.491987742 5.69835336,0.587960262 C5.62637418,0.587960262 5.5664056,0.599939082 5.49442614,0.611935262 C5.07454598,0.659921942 4.0548452,0.803868682 2.77121124,1.36770776 C2.32733802,1.55965289 2.0633893,1.70363743 2.0633893,1.70363743 C2.0633893,1.70363743 3.04710882,0.755875562 5.20649276,0.144049942 L5.08652452,0.000106700029 C5.08652452,0.000106700029 5.08017132,-3.60999713e-05 5.0677998,8.70002873e-06 L5.0677998,1.36000287e-05 Z M4.76262892,4.42685219 C5.44643372,4.42685219 5.99828264,5.01466585 5.98628674,5.74645663 C5.98628674,6.47824839 5.44643372,7.06610783 4.76262892,7.06610783 C4.09082044,7.06610783 3.5389711,6.47824839 3.5389711,5.74645663 C3.5389711,5.01466585 4.07882384,4.42685219 4.76262892,4.42685219 Z M9.14137784,4.42685219 C9.81318618,4.42685219 10.3650357,5.01466585 10.3650357,5.74645663 C10.3650357,6.47824839 9.8251832,7.06610783 9.14137784,7.06610783 C8.46956964,7.06610783 7.91772002,6.47824839 7.91772002,5.74645663 C7.91772002,5.01466585 8.45757276,4.42685219 9.14137784,4.42685219 Z" transform="translate(4 6)"></path>
+      </g>
+    </svg>
+	
+						
+						</a></li>
+				
+					<li><a target="_blank" href="https://reddit.com/r/decentraland" class="Reddit-icon">
+						
+							
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+      <g fill="none">
+        <rect width="22" height="22" fill="#676370" rx="11"></rect>
+        <path fill="#FFF" d="M14,6.63157895 C14,6.95987493 13.9345794,7.22251172 13.7383178,7.48514851 C13.6074766,7.7477853 13.411215,7.9447629 13.1495327,8.07608129 C13.2149533,8.33871808 13.2149533,8.53569567 13.2149533,8.79833246 C13.2149533,9.58624283 12.953271,10.3741532 12.364486,11.0307452 C11.8411215,11.6873372 11.0560748,12.2782699 10.1401869,12.6722251 C9.22429907,13.0661803 8.17757009,13.2631579 7,13.2631579 C5.88785047,13.2631579 4.8411215,13.0661803 3.92523364,12.6722251 C2.94392523,12.2782699 2.22429907,11.7529964 1.70093458,11.0307452 C1.17757009,10.3741532 0.85046729,9.58624283 0.85046729,8.79833246 C0.85046729,8.53569567 0.85046729,8.33871808 0.91588785,8.07608129 C0.654205607,7.9447629 0.457943925,7.7477853 0.261682243,7.48514851 C0.130841121,7.22251172 0,6.95987493 0,6.63157895 C0,6.23762376 0.130841121,5.84366858 0.457943925,5.51537259 C0.785046729,5.1870766 1.11214953,5.05575821 1.57009346,5.05575821 C2.02803738,5.05575821 2.35514019,5.1870766 2.68224299,5.51537259 C3.79439252,4.72746222 5.1682243,4.33350703 6.6728972,4.26784784 L7.58878505,0.196977592 C7.58878505,0.131318395 7.65420561,0.0656591975 7.71962617,0.0656591975 C7.78504673,0 7.85046729,0 7.91588785,0 L10.7943925,0.656591975 C10.8598131,0.459614382 11.0560748,0.328295987 11.1869159,0.196977592 C11.3831776,0.0656591975 11.5794393,0 11.7757009,0 C12.1028037,0 12.364486,0.131318395 12.6261682,0.328295987 C12.8224299,0.52527358 12.953271,0.853569567 12.953271,1.18186555 C12.953271,1.51016154 12.8224299,1.77279833 12.6261682,2.03543512 C12.4299065,2.29807191 12.1028037,2.36373111 11.7757009,2.36373111 C11.4485981,2.36373111 11.1869159,2.23241271 10.9252336,2.03543512 C10.728972,1.83845753 10.5981308,1.51016154 10.5981308,1.18186555 L7.98130841,0.590932777 L7.19626168,4.26784784 C8.76635514,4.33350703 10.0747664,4.72746222 11.2523364,5.51537259 C11.5794393,5.1870766 11.9065421,5.05575821 12.364486,5.05575821 C12.8224299,5.05575821 13.1495327,5.1870766 13.4766355,5.51537259 C13.8691589,5.84366858 14,6.23762376 14,6.63157895 Z M3.3364486,8.20739969 C3.3364486,8.53569567 3.46728972,8.79833246 3.6635514,9.06096925 C3.85981308,9.32360604 4.18691589,9.38926524 4.51401869,9.38926524 C4.8411215,9.38926524 5.10280374,9.25794685 5.36448598,9.06096925 C5.56074766,8.86399166 5.69158879,8.53569567 5.69158879,8.20739969 C5.69158879,7.8791037 5.56074766,7.61646691 5.36448598,7.35383012 C5.1682243,7.15685253 4.8411215,7.02553413 4.51401869,7.02553413 C4.18691589,7.02553413 3.92523364,7.15685253 3.72897196,7.35383012 C3.53271028,7.55080771 3.3364486,7.8791037 3.3364486,8.20739969 Z M9.61682243,10.965086 C9.68224299,10.8994268 9.68224299,10.8337676 9.68224299,10.7681084 C9.68224299,10.7024492 9.68224299,10.63679 9.61682243,10.5711308 C9.55140187,10.5054716 9.48598131,10.5054716 9.42056075,10.5054716 C9.35514019,10.5054716 9.28971963,10.5054716 9.22429907,10.5711308 C9.02803738,10.7681084 8.70093458,10.965086 8.30841121,11.0307452 C7.91588785,11.1620636 7.45794393,11.1620636 7.06542056,11.1620636 C6.6728972,11.1620636 6.21495327,11.0964044 5.82242991,11.0307452 C5.42990654,10.8994268 5.10280374,10.7681084 4.90654206,10.5711308 C4.8411215,10.5054716 4.77570093,10.5054716 4.71028037,10.5054716 C4.64485981,10.5054716 4.57943925,10.5054716 4.51401869,10.5711308 C4.44859813,10.63679 4.44859813,10.7024492 4.44859813,10.7681084 C4.44859813,10.8337676 4.44859813,10.8994268 4.51401869,10.965086 C4.71028037,11.1620636 5.03738318,11.3590412 5.42990654,11.4903596 C5.82242991,11.621678 6.14953271,11.6873372 6.41121495,11.7529964 C6.6728972,11.7529964 6.86915888,11.8186555 7.13084112,11.8186555 C7.39252336,11.8186555 7.58878505,11.8186555 7.85046729,11.7529964 C8.11214953,11.7529964 8.43925234,11.621678 8.8317757,11.4903596 C9.09345794,11.3590412 9.42056075,11.2277228 9.61682243,10.965086 Z M9.61682243,9.38926524 C9.94392523,9.38926524 10.2056075,9.25794685 10.4672897,9.06096925 C10.728972,8.86399166 10.7943925,8.53569567 10.7943925,8.20739969 C10.7943925,7.8791037 10.6635514,7.61646691 10.4672897,7.41948932 C10.271028,7.22251172 9.94392523,7.09119333 9.68224299,7.09119333 C9.35514019,7.09119333 9.09345794,7.22251172 8.8317757,7.41948932 C8.63551402,7.61646691 8.5046729,7.9447629 8.5046729,8.27305888 C8.5046729,8.60135487 8.63551402,8.86399166 8.8317757,9.12662845 C9.02803738,9.25794685 9.28971963,9.38926524 9.61682243,9.38926524 Z" transform="translate(4 4)"></path>
+      </g>
+    </svg>
+
+						
+						</a></li>
+				
+					<li><a target="_blank" href="https://github.com/decentraland" class="Github-icon">
+						
+							
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+      <g fill="none">
+        <rect width="22" height="22" fill="#676370" rx="11"></rect>
+        <path fill="#FFF" d="M7.88857838,9.78302833 C7.88857838,9.92796208 7.88857838,10.0728958 7.88857838,10.2902965 C7.88857838,11.159899 7.88857838,11.9570346 7.88857838,12.8266371 C7.88857838,12.9715709 7.88857838,13.0440378 7.73831975,12.9715709 C6.6865093,12.9715709 5.63469884,12.9715709 4.58288839,12.9715709 C4.43262976,12.9715709 4.43262976,12.899104 4.43262976,12.8266371 C4.43262976,12.3918359 4.43262976,11.8845677 4.43262976,11.4497665 C4.43262976,11.3772996 4.50775908,11.3048327 4.35750044,11.3048327 C4.35750044,11.3048327 4.28237112,11.3048327 4.28237112,11.3048327 C4.2072418,11.3048327 4.2072418,11.3048327 4.13211249,11.3048327 C3.68133658,11.3772996 3.30568999,11.3772996 2.85491408,11.3048327 C2.1036209,11.0874321 1.57771568,10.7250977 1.2771984,10.000429 C1.05181045,9.5656277 0.751293179,9.13082644 0.450775908,8.76849206 C0.37564659,8.6235583 0.150258636,8.6235583 0.0751293179,8.47862455 C0,8.40615767 0,8.40615767 0,8.3336908 C0,8.26122392 0.0751293179,8.26122392 0.150258636,8.26122392 C0.826422497,8.18875704 1.35232772,8.55109143 1.65284499,9.05835956 C1.95336227,9.5656277 2.40413817,9.92796208 2.9300434,10.0728958 C3.38081931,10.1453627 3.7564659,10.1453627 4.2072418,10.000429 C4.28237112,10.000429 4.35750044,9.92796208 4.35750044,9.78302833 C4.35750044,9.34822707 4.50775908,8.98589269 4.80827635,8.6235583 C4.65801771,8.6235583 4.58288839,8.55109143 4.50775908,8.55109143 C3.7564659,8.47862455 3.08030204,8.18875704 2.55439681,7.75395579 C1.87823295,7.24668765 1.50258636,6.59448576 1.35232772,5.869817 C1.2771984,5.14514823 1.2771984,4.49294634 1.35232772,3.76827758 C1.42745704,3.26100944 1.57771568,2.75374131 1.95336227,2.31894005 C2.1036209,2.17400629 2.1036209,2.10153942 2.02849158,1.88413879 C1.80310363,1.30440378 1.87823295,0.724668765 2.1036209,0.144933753 C2.1036209,0 2.17875022,0 2.32900886,0 C2.77978476,0.144933753 3.15543135,0.362334382 3.45594862,0.652201888 C3.60620726,0.797135641 3.7564659,0.942069394 3.90672453,1.15947002 C3.98185385,1.2319369 3.98185385,1.2319369 4.05698317,1.15947002 C4.28237112,0.942069394 4.58288839,0.942069394 4.88340567,0.869602518 C5.70982816,0.724668765 6.61137998,0.724668765 7.43780247,0.869602518 C7.73831975,0.942069394 8.03883702,0.942069394 8.26422497,1.15947002 C8.41448361,1.2319369 8.41448361,1.2319369 8.48961293,1.08700315 C8.71500088,0.797135641 9.01551815,0.507268135 9.31603542,0.289867506 C9.54142338,0.144933753 9.76681133,0.0724668765 9.99219928,0 C10.0673286,0 10.1424579,0 10.2175872,0.0724668765 C10.4429752,0.724668765 10.5181045,1.30440378 10.2175872,1.95660567 C10.2175872,2.02907254 10.1424579,2.10153942 10.2175872,2.17400629 C10.6683631,2.53634068 10.8186218,3.04360881 10.8937511,3.55087695 C10.9688804,4.20307884 11.0440097,4.85528073 10.9688804,5.50748261 C10.8186218,6.59448576 10.2175872,7.46408828 9.24090611,7.97135641 C9.16577679,7.97135641 9.16577679,7.97135641 9.16577679,8.04382329 C9.16577679,8.04382329 9.09064747,8.04382329 9.09064747,8.11629017 C9.01551815,8.11629017 8.94038883,8.18875704 8.86525952,8.18875704 C8.86525952,8.18875704 8.7901302,8.18875704 8.7901302,8.18875704 C8.71500088,8.18875704 8.71500088,8.18875704 8.71500088,8.26122392 C8.71500088,8.26122392 8.63987156,8.26122392 8.63987156,8.26122392 C8.48961293,8.26122392 8.33935429,8.3336908 8.26422497,8.40615767 C8.26422497,8.40615767 8.18909565,8.40615767 8.18909565,8.40615767 C8.11396634,8.40615767 7.9637077,8.40615767 7.88857838,8.47862455 C7.81344906,8.47862455 7.73831975,8.47862455 7.66319043,8.47862455 C7.58806111,8.47862455 7.51293179,8.47862455 7.51293179,8.47862455 C7.43780247,8.47862455 7.51293179,8.55109143 7.51293179,8.55109143 C7.51293179,8.6235583 7.51293179,8.6235583 7.58806111,8.6235583 C7.58806111,8.69602518 7.66319043,8.69602518 7.66319043,8.76849206 C7.66319043,8.84095893 7.66319043,8.91342581 7.73831975,8.98589269 C7.73831975,8.98589269 7.73831975,9.05835956 7.73831975,9.05835956 C7.73831975,9.13082644 7.73831975,9.27576019 7.81344906,9.34822707 C7.81344906,9.34822707 7.81344906,9.42069394 7.81344906,9.42069394 C7.81344906,9.49316082 7.81344906,9.49316082 7.81344906,9.5656277 C7.88857838,9.71056145 7.88857838,9.71056145 7.88857838,9.78302833 Z" transform="translate(5 5)"></path>
+      </g>
+    </svg>
+	
+						
+						</a></li>
+				
+					<li><a target="_blank" href="https://twitter.com/decentraland" class="Twitter-icon">
+						
+							
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22">
+      <g fill="none">
+        <rect width="22" height="22" fill="#676370" rx="11"></rect>
+        <path fill="#FFF" d="M13,1.82494005 C12.5384615,2.058753 12,2.2146283 11.4615385,2.2146283 C12,1.9028777 12.4615385,1.35731415 12.6153846,0.73381295 C12.0769231,1.04556355 11.5384615,1.2793765 10.9230769,1.35731415 C10.4615385,0.8117506 9.76923077,0.5 9,0.5 C7.53846154,0.5 6.30769231,1.7470024 6.30769231,3.22781775 C6.30769231,3.4616307 6.30769231,3.617506 6.38461538,3.85131894 C4.15384615,3.77338129 2.15384615,2.6822542 0.846153846,1.04556355 C0.615384615,1.4352518 0.461538462,1.9028777 0.461538462,2.44844125 C0.461538462,3.38369305 0.923076923,4.24100719 1.69230769,4.70863309 C1.23076923,4.70863309 0.846153846,4.55275779 0.461538462,4.39688249 C0.461538462,5.72182254 1.38461538,6.81294964 2.61538462,7.04676259 C2.38461538,7.12470024 2.15384615,7.12470024 1.92307692,7.12470024 C1.76923077,7.12470024 1.61538462,7.12470024 1.38461538,7.04676259 C1.69230769,8.13788969 2.69230769,8.91726619 3.92307692,8.91726619 C3,9.61870504 1.84615385,10.0863309 0.615384615,10.0863309 C0.384615385,10.0863309 0.153846154,10.0863309 0,10.0863309 C1.15384615,10.8657074 2.61538462,11.3333333 4.07692308,11.3333333 C9,11.3333333 11.6923077,7.20263789 11.6923077,3.617506 C11.6923077,3.4616307 11.6923077,3.38369305 11.6923077,3.22781775 C12.1538462,2.91606715 12.6153846,2.3705036 13,1.82494005 Z" transform="translate(5 5)"></path>
+      </g>
+    </svg>
+	
+						
+						</a></li>
+				
+			</ul>
+			<div class="copyright">
+				© 2022 Decentraland
+				<br>
+				<a href="https://creativecommons.org/licenses/by-sa/3.0/" rel="noopener noreferrer" target="_blank">CC BY-SA 3.0</a>
+			</div>
+		</div>
+	</div>
+</footer>
+
+  
+
+
+
+
+
+
+  <script src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/clipboard.min.js" integrity="sha384-JbuAF+8+4FF8uR/7D07/5IWwIj2FoNw5jJQGg1s8GtGIfQXFxWPRdMNWYmU35KjP" crossorigin="anonymous"></script>
+  <script>
+    $('.highlighter-rouge code').each(function(i) {
+      const currentId = 'codeblock' + (i + 1)
+      $(this).attr('id', currentId)
+      const clipButton = (
+        '<div class="copy-code">' +
+          '<button class="codeblock-btn" data-clipboard-target="#' + currentId + '">' +
+            '<span class="status-copy"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16"><g fill="none" fill-rule="evenodd"><path d="M-3-2v20h20V-2z"/><path class="main" fill="#F04" d="M3.25 3h-.5a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V13h.5a2 2 0 0 0 2-2V2.5a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2V3zM4.5 3v-.25a1 1 0 0 1 1-1H11a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-.25V5a2 2 0 0 0-2-2H4.5zM2 5.25a1 1 0 0 1 1-1h5.5a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-8z"/></g></svg> Copy code</span>' +
+            '<span class="status-copied"><svg width="12" height="9" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><path d="M-4-6h20v20H-4z"/><path class="main" d="M.17 5.037A.565.565 0 0 1 0 4.661c0-.107.057-.268.17-.376l.796-.752a.571.571 0 0 1 .795 0l2.258 2.35a.286.286 0 0 0 .398 0L10.239.162a.571.571 0 0 1 .795 0l.796.752a.5.5 0 0 1 0 .753L4.587 8.839A.53.53 0 0 1 4.189 9a.53.53 0 0 1-.397-.161L.17 5.037z" fill="#F04" fill-rule="nonzero"/></g></svg> Copied</span>' +
+          '</button>' +
+        '</div>'
+      )
+      $(this).parent().after(clipButton)
+    })
+
+    const clipboard = new ClipboardJS('.codeblock-btn')
+    clipboard.on('success', function(e) { e.clearSelection() })
+
+    $('.codeblock-btn').on('click', function () {
+      const $this = $(this)
+      $this.addClass('copied')
+      window.setTimeout(function() {
+        $this.removeClass('copied')
+      }, 3000)
+    })
+  </script>
+
+
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://cdn.segment.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="9DnXdmM2gPay2fzMBI3fadW22f0KbyzB";;analytics.SNIPPET_VERSION="4.15.3";
+  analytics.load("9DnXdmM2gPay2fzMBI3fadW22f0KbyzB");
+  analytics.page();
+  }}();
+</script>
+  
+<script>!function (d){var s = document.createElement('script');s.type="text/javascript";s.src="https://a.decentraland.org/a.js";s.onload = function (){window.ad.load();}; document.head.appendChild(s)}();</script>
+<script>
+var _rollbarConfig = {
+    accessToken: "307bb0d58c224c738e820f4218658163",
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    rollbarJsUrl: "https://cdn.rollbar.com/rollbarjs/refs/tags/v2.24.0/rollbar.min.js",
+    payload: {
+      environment: "dev",
+      release: "blog-2110635171.commit-2e270a8",
+      commit_sha: "2e270a8f15bdf6699ee908acd1e1070046769ae3",
+      commit_short_sha: "2e270a8f15bdf6699ee908acd1e1070046769ae3",
+      commit_ref_name: "refs/heads/master",
+      commit_branch: "refs/heads/master",
+      commit_tag: "refs/heads/master"
+    }
+};
+// Rollbar Snippet
+!function(r){function e(n){if(o[n])return o[n].exports;var t=o[n]={exports:{},id:n,loaded:!1};return r[n].call(t.exports,t,t.exports,e),t.loaded=!0,t.exports}var o={};return e.m=r,e.c=o,e.p="",e(0)}([function(r,e,o){"use strict";var n=o(1),t=o(4);_rollbarConfig=_rollbarConfig||{},_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||"https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.4.6/rollbar.min.js",_rollbarConfig.async=void 0===_rollbarConfig.async||_rollbarConfig.async;var a=n.setupShim(window,_rollbarConfig),l=t(_rollbarConfig);window.rollbar=n.Rollbar,a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,l)},function(r,e,o){"use strict";function n(r){return function(){try{return r.apply(this,arguments)}catch(r){try{console.error("[Rollbar]: Internal error",r)}catch(r){}}}}function t(r,e){this.options=r,this._rollbarOldOnError=null;var o=s++;this.shimId=function(){return o},"undefined"!=typeof window&&window._rollbarShims&&(window._rollbarShims[o]={handler:e,messages:[]})}function a(r,e){if(r){var o=e.globalAlias||"Rollbar";if("object"==typeof r[o])return r[o];r._rollbarShims={},r._rollbarWrappedError=null;var t=new p(e);return n(function(){e.captureUncaught&&(t._rollbarOldOnError=r.onerror,i.captureUncaughtExceptions(r,t,!0),i.wrapGlobals(r,t,!0)),e.captureUnhandledRejections&&i.captureUnhandledRejections(r,t,!0);var n=e.autoInstrument;return e.enabled!==!1&&(void 0===n||n===!0||"object"==typeof n&&n.network)&&r.addEventListener&&(r.addEventListener("load",t.captureLoad.bind(t)),r.addEventListener("DOMContentLoaded",t.captureDomContentLoaded.bind(t))),r[o]=t,t})()}}function l(r){return n(function(){var e=this,o=Array.prototype.slice.call(arguments,0),n={shim:e,method:r,args:o,ts:new Date};window._rollbarShims[this.shimId()].messages.push(n)})}var i=o(2),s=0,d=o(3),c=function(r,e){return new t(r,e)},p=d.bind(null,c);t.prototype.loadFull=function(r,e,o,t,a){var l=function(){var e;if(void 0===r._rollbarDidLoad){e=new Error("rollbar.js did not load");for(var o,n,t,l,i=0;o=r._rollbarShims[i++];)for(o=o.messages||[];n=o.shift();)for(t=n.args||[],i=0;i<t.length;++i)if(l=t[i],"function"==typeof l){l(e);break}}"function"==typeof a&&a(e)},i=!1,s=e.createElement("script"),d=e.getElementsByTagName("script")[0],c=d.parentNode;s.crossOrigin="",s.src=t.rollbarJsUrl,o||(s.async=!0),s.onload=s.onreadystatechange=n(function(){if(!(i||this.readyState&&"loaded"!==this.readyState&&"complete"!==this.readyState)){s.onload=s.onreadystatechange=null;try{c.removeChild(s)}catch(r){}i=!0,l()}}),c.insertBefore(s,d)},t.prototype.wrap=function(r,e,o){try{var n;if(n="function"==typeof e?e:function(){return e||{}},"function"!=typeof r)return r;if(r._isWrap)return r;if(!r._rollbar_wrapped&&(r._rollbar_wrapped=function(){o&&"function"==typeof o&&o.apply(this,arguments);try{return r.apply(this,arguments)}catch(o){var e=o;throw e&&("string"==typeof e&&(e=new String(e)),e._rollbarContext=n()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e),e}},r._rollbar_wrapped._isWrap=!0,r.hasOwnProperty))for(var t in r)r.hasOwnProperty(t)&&(r._rollbar_wrapped[t]=r[t]);return r._rollbar_wrapped}catch(e){return r}};for(var u="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad".split(","),f=0;f<u.length;++f)t.prototype[u[f]]=l(u[f]);r.exports={setupShim:a,Rollbar:p}},function(r,e){"use strict";function o(r,e,o){if(r){var t;"function"==typeof e._rollbarOldOnError?t=e._rollbarOldOnError:r.onerror&&!r.onerror.belongsToShim&&(t=r.onerror,e._rollbarOldOnError=t);var a=function(){var o=Array.prototype.slice.call(arguments,0);n(r,e,t,o)};a.belongsToShim=o,r.onerror=a}}function n(r,e,o,n){r._rollbarWrappedError&&(n[4]||(n[4]=r._rollbarWrappedError),n[5]||(n[5]=r._rollbarWrappedError._rollbarContext),r._rollbarWrappedError=null),e.handleUncaughtException.apply(e,n),o&&o.apply(r,n)}function t(r,e,o){if(r){"function"==typeof r._rollbarURH&&r._rollbarURH.belongsToShim&&r.removeEventListener("unhandledrejection",r._rollbarURH);var n=function(r){var o,n,t;try{o=r.reason}catch(r){o=void 0}try{n=r.promise}catch(r){n="[unhandledrejection] error getting `promise` from event"}try{t=r.detail,!o&&t&&(o=t.reason,n=t.promise)}catch(r){t="[unhandledrejection] error getting `detail` from event"}o||(o="[unhandledrejection] error getting `reason` from event"),e&&e.handleUnhandledRejection&&e.handleUnhandledRejection(o,n)};n.belongsToShim=o,r._rollbarURH=n,r.addEventListener("unhandledrejection",n)}}function a(r,e,o){if(r){var n,t,a="EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload".split(",");for(n=0;n<a.length;++n)t=a[n],r[t]&&r[t].prototype&&l(e,r[t].prototype,o)}}function l(r,e,o){if(e.hasOwnProperty&&e.hasOwnProperty("addEventListener")){for(var n=e.addEventListener;n._rollbarOldAdd&&n.belongsToShim;)n=n._rollbarOldAdd;var t=function(e,o,t){n.call(this,e,r.wrap(o),t)};t._rollbarOldAdd=n,t.belongsToShim=o,e.addEventListener=t;for(var a=e.removeEventListener;a._rollbarOldRemove&&a.belongsToShim;)a=a._rollbarOldRemove;var l=function(r,e,o){a.call(this,r,e&&e._rollbar_wrapped||e,o)};l._rollbarOldRemove=a,l.belongsToShim=o,e.removeEventListener=l}}r.exports={captureUncaughtExceptions:o,captureUnhandledRejections:t,wrapGlobals:a}},function(r,e){"use strict";function o(r,e){this.impl=r(e,this),this.options=e,n(o.prototype)}function n(r){for(var e=function(r){return function(){var e=Array.prototype.slice.call(arguments,0);if(this.impl[r])return this.impl[r].apply(this.impl,e)}},o="log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleUnhandledRejection,_createItem,wrap,loadFull,shimId,captureEvent,captureDomContentLoaded,captureLoad".split(","),n=0;n<o.length;n++)r[o[n]]=e(o[n])}o.prototype._swapAndProcessMessages=function(r,e){this.impl=r(this.options);for(var o,n,t;o=e.shift();)n=o.method,t=o.args,this[n]&&"function"==typeof this[n]&&("captureDomContentLoaded"===n||"captureLoad"===n?this[n].apply(this,[t[0],o.ts]):this[n].apply(this,t));return this},r.exports=o},function(r,e){"use strict";r.exports=function(r){return function(e){if(!e&&!window._rollbarInitialized){r=r||{};for(var o,n,t=r.globalAlias||"Rollbar",a=window.rollbar,l=function(r){return new a(r)},i=0;o=window._rollbarShims[i++];)n||(n=o.handler),o.handler._swapAndProcessMessages(l,o.messages);window[t]=n,window._rollbarInitialized=!0}}}}]);
+// End Rollbar Snippet
+</script>
+
+
+
+
+<iframe style="display: none;" src="./Servers Deep Dive Part 2_ Launching a Server _ Decentraland_files/saved_resource(1).html"></iframe></body></html>
