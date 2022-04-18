@@ -26,6 +26,7 @@ Download and install the Decentraland CLI by running the following command:
 
 ```
 $ npm i -g decentraland
+$ npm install -g firebase-tools
 ```
 
 **Previewing the scene**
@@ -45,9 +46,30 @@ For example, if the URL is `http://192.168.1.132:8000?position=0%2C0&SCENE_DEBUG
 
 > Note: Make sure you have a browser wallet installed like Metamask or Fortmatic as you'll need to be logged onto those with the network set to the `Ethereum Mainnet` in order for the scene to perform checks on your wallet address.
 
-## Acknowledgements
-- _accessDenied.mp3_ modified from https://freesound.org/people/tcpp/sounds/151309/
-- _jazz.mp3_ modified from https://www.hooksounds.com/royalty-free-music/elegant-jazz/376506/
-- _jazzMuffled.mp3_ modified from https://www.hooksounds.com/royalty-free-music/elegant-jazz/376506/
+**Setting up the server**
+
+The scene is set up to make use of an existing server. To launch your own server, we recommend you deploy what's in the /server folder to your own Firebase account, following the steps in [this tutorial](https://decentraland.org/blog/tutorials/servers-part-2/).
+
+***OR FOLLOW SERVER TUTORIAL file***
+
+1- Create Firebase project
+2- change database id from below files
+        + server/.firebaseerc 
+        + server/src/index.ts 
+        + server/src/index.js
+        + src/serverHandler.ts
+        + game.ts
+3- Create Firestone database
+4- Set collection name with Signatures
+5- In Project Settings/Service Accounts, Create service account and generate new private key and download it
+6- Change server/functions/permissions.json file with new private key file
+7- In server file run below commands
+        + firebase login
+        + npm run serve
+        + firebase deploy
+
+
+
+
 
 
