@@ -5,3 +5,6 @@ bin
 *.*~
 export
 
+# secret credentials
+server/functions/permissions.json
+permissions.json
