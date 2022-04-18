@@ -6,10 +6,14 @@ import { Sound } from "./sound"
 import * as ui from "@dcl/ui-scene-utils"
 import * as Players from "@decentraland/Players"
 import { getUserData, UserData } from '@decentraland/Identity'
+import { signGuestBook, getGuestBook } from './serverHandler'
 
 // Config
 let userAddress: string
-export let userData: UserData
+
+export const fireBaseServer =
+  'https://us-central1-dcl-guestbook0.cloudfunctions.net/app/'
+
 
 // Example token from the contract: https://opensea.io/assets/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f/2
 // Contract address on Etherscan: https://etherscan.io/address/0x6b47e7066c7db71aa04a1d5872496fe05c4c331f
@@ -61,7 +65,8 @@ door.addComponent(
 executeTask(async () => {
   try {
     userAddress = await EthereumController.getUserAccount()
-    //userAddress = (await userData).publicKey
+    // get user id
+    signGuestBook()
     log("User Address: ", userAddress)
   } catch (error) {
     log("PUPUPU")
