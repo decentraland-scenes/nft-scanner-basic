@@ -46,6 +46,7 @@ app.post('/add-signature', async (req: any, res: any) => {
       .create({
         id: newSignature.id,
         name: newSignature.name,
+        time: new Date().toString(),
       })
 
     return res.status(200).send('Signed book!')
