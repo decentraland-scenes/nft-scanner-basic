@@ -6,7 +6,7 @@ import { Sound } from "./sound"
 import * as ui from "@dcl/ui-scene-utils"
 import * as Players from "@decentraland/Players"
 import { getUserData, UserData } from '@decentraland/Identity'
-import { signGuestBook, getGuestBook } from './serverHandler'
+import { signGuestBook, getGuestBook, updateSignatureTime, getGuest } from './serverHandler'
 
 // Config
 let userAddress: string
@@ -66,7 +66,8 @@ executeTask(async () => {
   try {
     userAddress = await EthereumController.getUserAccount()
     // get user id
-    signGuestBook()
+    //signGuestBook()
+
     log("User Address: ", userAddress)
   } catch (error) {
     log("PUPUPU")
@@ -93,6 +94,7 @@ async function checkTokens() {
     door.playDoorOpen()
     openDoorSound.getComponent(AudioSource).playOnce()
     jazzSound.getComponent(AudioSource).volume = 1.0
+    updateSignatureTime() // deneme
   } else {
     noSign.show(1)
     accessDeniedSound.getComponent(AudioSource).playOnce()

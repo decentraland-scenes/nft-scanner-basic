@@ -26,6 +26,21 @@ export async function getGuestBook() {
   }
 }
 
+// returns player data as json
+export async function getGuest() {
+  if (!userData) {
+    await setUserData()
+  }
+  try {
+    const url = fireBaseServer + 'get-signatures'
+    const response = await fetch(url)
+    const json = await filterByID(response.json(), userData.userId)
+    return json
+  } catch (e) {
+    log('error fetching scores from server ', e)
+  }
+}
+
 // change data in scoreboard
 export async function signGuestBook() {
   if (!userData) {
@@ -47,4 +62,30 @@ export async function signGuestBook() {
   } catch (e) {
     log('error posting to server ', e)
   }
+}
+
+export async function updateSignatureTime(){
+  if (!userData){
+    await setUserData()
+  }
+  try{
+    const url = fireBaseServer + 'update-signature?doc='+ userData.userId
+    const body = JSON.stringify({
+      id: (await userData).userId,
+      name: (await userData).displayName
+    })
+    log(body)
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    })
+    return response.json()
+  } catch (e) {
+    log('error posting to server ', e)
+  }
+}
+
+async function filterByID(data : any, id: string){
+  return data.filter((e : any) => e.id == id)
 }
